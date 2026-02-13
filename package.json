@@ -1,0 +1,19 @@
+{
+  "name": "caja",
+  "version": "1.0.0",
+  "description": "Trabajo de final de grado en Formación Profesional Grado Superior en Desarrollo de Aplicaciones Web.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "dev": "nodemon ."
+  },
+  "keywords": [],
+  "author": "Henry Talavera",
+  "license": "ISC",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "express": "^5.2.1",
+    "express-handlebars": "^8.0.3",
+    "nodemon": "^3.1.11"
+  }
+}

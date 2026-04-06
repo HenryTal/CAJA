@@ -8,10 +8,28 @@
     --light-nav-bg-color: #8E8E8E;
 }
 
+/* Variante Regular */
+@font-face {
+  font-family: "Nunito";
+  src: url('../fonts/Nunito-VariableFont_wght.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Variante Italic */
+@font-face {
+  font-family: "Nunito";
+  src: url('../fonts/Nunito-Italic-VariableFont_wght.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
 body {
     width: 100vw;
     min-height: 100vh;
-    font-family: Arial;
+    font-family: "Nunito";
     margin: 0;
 }
 

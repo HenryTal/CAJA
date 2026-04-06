@@ -5,6 +5,9 @@ const app = express();
 // Definición de engine para usar Handlebars
 const { engine } = require("express-handlebars");
 
+// Definición del archivo con las rutas.
+const router = require("../routes/routes");
+
 // Definición de la extención de los archivos para render.
 app.engine(".hbs", engine({
     extname:"hbs"
@@ -15,5 +18,7 @@ app.set('view engine', '.hbs');
 app.set("views", "./views")
 // Definición de la carpeta public.
 app.use("/", express.static("./public"));
+// Aplicación usara el router anterior para las rutas '/';
+app.use('/', router);
 
 module.exports = app;

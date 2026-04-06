@@ -7,13 +7,10 @@ require("dotenv").config();
 const puertoApp = process.env.APP_PORT || 3000;
 const nombreApp = process.env.APP_NAME;
 
-// Definición de aplicación express y routes.
+// Definición de aplicación express.
 const app = require("./src/express");
-const router = require("./routes/routes");
 
-// Aplicación usara el router anterior para las rutas '/';
-app.use('/', router);
-
+// Aplicación ejecutada en el puerto extraido desde .env o el por defecto.
 app.listen(puertoApp, () => {
     console.log(`[ ${nombreApp} ] Página Web en el Puerto ${puertoApp}.`.green);
 });

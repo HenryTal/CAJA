@@ -1,12 +1,12 @@
 .navbar {
-    width: 100vw;
+    width: 100%;
 }
 
 .navbar .container {
-    width: 90%;
+    width: 100%;
     max-width: 1200px;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     justify-self: center;
 }
 

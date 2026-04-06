@@ -1,0 +1,30 @@
+:root {
+    --dark-bg-color: #565656;
+    --dark-font-color: #E6E6E6;
+    --dark-nav-bg-color: #343434;
+    
+    --light-font-color: #343434;
+    --light-bg-color: #E6E6E6;
+    --light-nav-bg-color: #8E8E8E;
+}
+
+body {
+    width: 100vw;
+    min-height: 100vh;
+    font-family: Arial;
+    margin: 0;
+}
+
+
+
+body[theme="dark"] {
+    background-color: var(--dark-bg-color);
+    color: var(--dark-font-color);
+}
+
+
+
+body[theme="light"] {
+    background-color: var(--light-bg-color);
+    color: var(--light-font-color);
+}

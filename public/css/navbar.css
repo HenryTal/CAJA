@@ -1,0 +1,25 @@
+.navbar {
+    width: 100vw;
+}
+
+.navbar .container {
+    width: 90%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: space-evenly;
+    justify-self: center;
+}
+
+.navbar .menu {
+    list-style: none;
+}
+
+body[theme="dark"] .navbar {
+    background-color: var(--dark-nav-bg-color);
+}
+
+
+
+body[theme="light"] .navbar {
+    background-color: var(--light-nav-bg-color);
+}

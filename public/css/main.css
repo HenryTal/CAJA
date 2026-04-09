@@ -1,11 +1,23 @@
 :root {
-    --dark-bg-color: #565656;
-    --dark-font-color: #E6E6E6;
-    --dark-nav-bg-color: #343434;
+    --dark-bg-color: #1A1A1A;
+    --dark-text-primary-color: #C5BDAF;
+    --dark-text-secondary-color: #E6E1D9;
+    --dark-nav-bg-color: #2E2E2E;
     
-    --light-font-color: #343434;
-    --light-bg-color: #E6E6E6;
-    --light-nav-bg-color: #8E8E8E;
+    --light-bg-color: #F9F5EE;
+    --light-text-primary-color: #3E3120;
+    --light-text-secondary-color: #6A563D;
+    --light-nav-bg-color: #F2E9DE;
+
+    --primary-color: #D4BC89;
+    --secondary-color: #C3AA83;
+
+    --text-family: "Nunito";
+    --text-weight: 500;
+    --text-size: 16px;
+
+    --navbar-container-max-width: 1400px;
+    --container-max-width: 1200px;
 }
 
 /* Variante Regular */
@@ -26,23 +38,50 @@
   font-display: swap;
 }
 
-body {
-    width: 100vw;
-    min-height: 100vh;
-    font-family: "Nunito";
+* {
     margin: 0;
+    padding: 0;
 }
 
-
-
+body {
+    width: 100%;
+    min-height: 120vh;
+    background-color: var(--bg-color);
+    font-family: var(--text-family);
+    font-weight: var(--text-weight);
+    font-size: var(--text-size);
+    color: var(--text-color);
+    margin-top: 86px;
+}
 body[theme="dark"] {
-    background-color: var(--dark-bg-color);
-    color: var(--dark-font-color);
+    --bg-color: var(--dark-bg-color);
+    --text-color: var(--dark-text-secondary-color);
+    --nav-bg-color: var(--dark-nav-bg-color);
+}
+body[theme="light"] {
+    --bg-color: var(--light-bg-color);
+    --text-color: var(--light-text-secondary-color);
+    --nav-bg-color: var(--light-nav-bg-color);
 }
 
+.link {
+    text-decoration: none;
+    color: var(--secondary-color);
+    transition: .2s ease color;
+}
+.link:hover {
+    color: var(--primary-color);
+}
 
+.section {
+    position: relative;
+    width: 100%;
+}
 
-body[theme="light"] {
-    background-color: var(--light-bg-color);
-    color: var(--light-font-color);
+.section .container {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: var(--container-max-width);
 }

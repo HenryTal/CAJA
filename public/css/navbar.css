@@ -1,25 +1,45 @@
 .navbar {
+    position: fixed;
+    top: 0;
     width: 100%;
+    background-color: var(--nav-bg-color);
+    z-index: 2;
 }
 
 .navbar .container {
     width: 100%;
-    max-width: 1200px;
+    max-width: var(--navbar-container-max-width);
     display: flex;
     justify-content: space-around;
     justify-self: center;
 }
 
-.navbar .menu {
+.navbar .logo {
+    width: 70px;
+    aspect-ratio: 1 / 1;
+    padding: 5px 0;
+}
+
+.navbar .menu, .navbar .settings {
     list-style: none;
 }
 
-body[theme="dark"] .navbar {
-    background-color: var(--dark-nav-bg-color);
+.navbar .menu {
+    display: flex;
+    gap: 5px;
 }
 
+.navbar .menu .item-menu .link {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 20px;
+}
 
-
-body[theme="light"] .navbar {
-    background-color: var(--light-nav-bg-color);
+.navbar #changeTheme {
+    height: fit-content;
+    font-size: 40px;
+    align-self: center;
+    color: var(--text-color);
+    cursor: pointer;
 }

@@ -22,8 +22,20 @@
     --bar-bg-color: #FFFFFF50;
     --bar-fill-color: var(--primary-color);
 
+    --button-color: var(--secondary-color);
+    --button-text-color: #E0E0E0;
+    --button-text-size: 15px;
+    --button-text-weight: 650;
+    --button-padding: 10px 15px;
+    --button-border-radius: 8px;
+    --button-color-hover: #135DB1;
+    --button-primary-color: #2274d2;
+    --button-primary-color-hover: #3687e4;
+    --button-secondary-color-hover: #D8D8D8;
+
     --carousel-button-color: #656565;
     --carousel-button-color-hover: #D3D3D3;
+    --carousel-item-bg-color: #353535;
 }
 
 /* Variante Regular */
@@ -49,6 +61,10 @@
     padding: 0;
 }
 
+p, span, h1, h2, h3, h4, h5 {
+    width: fit-content;
+}
+
 body {
     width: 100%;
     min-height: 120vh;
@@ -57,7 +73,7 @@ body {
     font-weight: var(--text-weight);
     font-size: var(--text-size);
     color: var(--text-color);
-    margin-top: 86px;
+    margin-top: 100px;
     transition: .2s ease background-color, .2s ease color;
 }
 body[theme="dark"] {
@@ -87,7 +103,7 @@ body[theme="light"] {
     position: fixed;
     top: 0;
     display: none;
-    z-index: 3;
+    z-index: 5;
 }
 
 .link {
@@ -97,6 +113,12 @@ body[theme="light"] {
 }
 .link:hover {
     color: var(--primary-color);
+}
+
+#main {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
 }
 
 .section {
@@ -112,6 +134,67 @@ body[theme="light"] {
     max-width: var(--container-max-width);
 }
 
+.button {
+    display: block;
+    width: fit-content;
+    text-decoration: none;
+    color: var(--button-text-color);
+    font-weight: var(--button-text-weight);
+    font-size: var(--button-text-size);
+    padding: var(--button-padding);
+    border-radius: var(--button-border-radius);
+    background-color: var(--button-color);
+    transition: .2s ease background-color;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    user-select: none;
+}
+.button:hover {
+    background-color: var(--button-color-hover);
+}
+.button:disabled {
+    background-color: var(--bg-color);
+    border: 2px solid var(--text-color);
+    color: var(--text-color);
+    cursor: not-allowed;
+}
+.button:disabled:hover {
+    background-color: var(--bg-color);
+}
+.button-primary {
+    background-color: var(--button-primary-color);
+}
+.button-primary:hover {
+    background-color: var(--button-primary-color-hover);
+}
+.button-secondary {
+    background-color: var(--bg-color);
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+}
+.button-secondary:hover {
+    background-color: var(--button-secondary-color-hover);
+}
+
+.image.img-loading {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.4;
+    filter: blur(10px);
+    transition: .2s ease opacity, .4s ease filter;
+}
+
+.image.img-loaded {
+    opacity: 1;
+    filter: blur(0);
+}
+.image.img-error {
+    opacity: 0;
+}
+
 .carousel {
     position: relative;
     transform: translateX(-50%);
@@ -124,6 +207,7 @@ body[theme="light"] {
 
 .carousel-button {
     position: absolute;
+    top: 0;
     width: 50%;
     height: 100%;
     display: flex;
@@ -133,7 +217,6 @@ body[theme="light"] {
     transition: .3s ease left, .3s ease right, .2s ease color;
     padding: 0 15px;
     cursor: pointer;
-    z-index: 1;
 }
 .carousel-button.button-prev {
     left: 0;
@@ -162,31 +245,68 @@ body[theme="light"] {
 }
 
 .carousel-item {
+    position: relative;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    background-color: var(--text-color);
+    background-color: var(--carousel-item-bg-color);
     flex-shrink: 0;
     opacity: .4;
 }
 .carousel-item.active, .carousel-item.copy {
     opacity: .8;
+    background-color: var(--primary-color);
 }
 
-.image.img-loading {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.4;
-    filter: blur(10px);
-    transition: .2s ease opacity, .4s ease filter;
+.carousel-item .info {
+    --blurring: 15%;
+    --padding-bottom: 20px;
+
+    position: absolute;
+    width: calc(50% - var(--blurring));
+    height: calc(100% - var(--padding-bottom));
+    max-height: 100%;
+    top: 0;
+    right: 0;
+    background: linear-gradient(to right, transparent 0%, #00000020 var(--blurring));
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-left: calc(var(--blurring) - 80px);
+    padding-bottom: var(--padding-bottom);
 }
 
-.image.img-loaded {
-    opacity: 1;
-    filter: blur(0);
+.carousel-item .info .cover {
+    width: 280px;
+    aspect-ratio: 16 / 9;
+    background-color: var(--text-color);
+    border-radius: 8px;
 }
-.image.img-error {
-    opacity: 0;
+
+.price {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.price .offer {
+    background-color: var(--primary-color);
+    padding: 3px 5px;
+    border-radius: 2px;
+}
+.price .offer::before {
+    content: "-";
+}
+.price .offer::after {
+    content: "%";
+    margin-left: 3px;
+}
+
+.price .older {
+    text-decoration: line-through;
+}
+.price .older::after, .price .now::after {
+    content: "€";
+    margin-left: 3px;
 }

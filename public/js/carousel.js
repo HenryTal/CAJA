@@ -39,15 +39,15 @@ function startCarousel() {
         // elementos actuales del carrusel.
         itemsContainer.prepend(lastItem);
 
-        // Busca el botón para ver el elemento anterior del carrusel.
-        const buttonPrev = carousel.querySelector(".button-prev");
-        // Agrega un evento para volver al elemento anterior en el carrusel.
-        buttonPrev.addEventListener("click", async () => index = await prevItem(itemsContainer, items, index));
+        // // Busca el botón para ver el elemento anterior del carrusel.
+        // const buttonPrev = carousel.querySelector(".button-prev");
+        // // Agrega un evento para volver al elemento anterior en el carrusel.
+        // buttonPrev.addEventListener("click", async () => index = await prevItem(itemsContainer, items, index));
         
-        // Busca el botón para ver el siguiente elemento del carrusel.
-        const buttonNext = carousel.querySelector(".button-next");
-        // Agrega un evento para ir al siguiente elemento en el carrusel.
-        buttonNext.addEventListener("click", async () => index = await nextItem(itemsContainer, items, index));
+        // // Busca el botón para ver el siguiente elemento del carrusel.
+        // const buttonNext = carousel.querySelector(".button-next");
+        // // Agrega un evento para ir al siguiente elemento en el carrusel.
+        // buttonNext.addEventListener("click", async () => index = await nextItem(itemsContainer, items, index));
 
         // Si tiene la clase "autoslide" agrega un intervalo para
         // cambiar el elemento mostrado en el carrusel automáticamente.

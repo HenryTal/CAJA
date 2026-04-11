@@ -4,7 +4,7 @@
     width: 100%;
     background-color: var(--nav-bg-color);
     transition: .2s ease background-color;
-    z-index: 2;
+    z-index: 5;
 }
 
 .navbar .container {

@@ -3,6 +3,7 @@
     top: 0;
     width: 100%;
     background-color: var(--nav-bg-color);
+    transition: .2s ease background-color;
     z-index: 2;
 }
 
@@ -38,7 +39,7 @@
 
 .navbar #changeTheme {
     height: fit-content;
-    font-size: 40px;
+    font-size: 25px;
     align-self: center;
     color: var(--text-color);
     cursor: pointer;

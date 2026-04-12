@@ -5,8 +5,14 @@ const router = express.Router();
 router.get('/', (req, res) => {
     // Renderizar la página HOME.
     res.render("inicio", {
-        titulo: "Inicio"
+        title: "Inicio"
     });
 });
+
+router.get('/test', (req, res) => {
+    res.render("navigationTest", {
+        title: "Prueba de SPA"
+    })
+})
 
 module.exports = router;

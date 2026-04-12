@@ -14,6 +14,9 @@ function loadFunctions() {
 
     // Carga las imágenes de la página
     imagesLoading();
+
+    const buttonTestSPA = document.getElementById("testSPA");
+    if (buttonTestSPA) buttonTestSPA.addEventListener("click", () => testNavigation(true));
 }
 
 
@@ -27,6 +30,82 @@ function loadFunctions() {
 // Agregar espera entre líneas de código.
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+/**
+ * Rellena la barra de carga cuando cambia de página.
+ * @param {number} percent - Tamaño del relleno de la barra.
+ * @returns 
+ */
+async function fillPageLoadBar(percent) {
+    // Busca la barra de carga.
+    const pageLoadBar = document.getElementById("pageLoadBar");
+    // Busca el relleno en la barra de carga.
+    const fillBar = pageLoadBar.querySelector(".fill");
+
+    // Muestra la barra de carga.
+    pageLoadBar.style.display = "block";
+    // Cambian el tamaño del relleno.
+    fillBar.style.width = `${percent}%`;
+    
+    // Si es el 100%.
+    if (percent != 100) return;
+    
+    // Espera 500 milisegundos.
+    await wait(500);
+    
+    // Oculta la barra de carga.
+    pageLoadBar.style.display = "none";
+    // Reinicia la barra de carga.
+    fillBar.style.width = `0`;
+}
+
+// Agrega un evento para cuando el usuario hace clic en
+// un elemento del página.
+window.addEventListener("click", (e) => {
+    // Si fue en un enlace o un elemento dentro de un enlace.
+    const anchor = e.target.closest('a');
+    
+    // Comproba si el enlace es interno y no tiene atributos especiales.
+    if (
+        !(anchor && 
+        anchor.tagName === 'A' && 
+        anchor.host === window.location.host &&
+        !anchor.getAttribute('download') &&
+        anchor.target !== '_blank')
+    ) return;
+    
+    // No recarga la página.
+    e.preventDefault();
+    
+    // La URL en el enlace.
+    const url = anchor.href.split(window.location.origin)[1];
+    
+    // Si la URL destino es la página de Inicio.
+    if (url == "/") navigateToHome(true);
+})    
+
+
+// Agrega un evento para cuando el usuario navega por el
+// historial.
+window.addEventListener("popstate", async () => {
+    // La página de destino.
+    const destinationURL = window.location.pathname;
+
+    // Los casos de posibles páginas a las que quiere ir el usuario.
+    switch (destinationURL) {
+        case "/":
+            // Lleva a la página Inicio.
+            navigateToHome();
+            break;
+    
+        case "/test":
+            // Lleva a la página test.
+            testNavigation(false);
+            break;
+
+        default:
+            break;
+    }
+});
 
 
 
@@ -126,4 +205,94 @@ function showImage(img) {
 function errorImage(img) {
     img.classList.add('img-error');
     img.classList.remove('img-loading');
+}
+
+
+
+// ╔════════════════════════════════════════════════════════════════════╗
+// ║                                                                    ║
+// ║                  SPA NAVIGATION INTERCEPTOR                        ║
+// ║                                                                    ║
+// ╚════════════════════════════════════════════════════════════════════╝
+
+/**
+ * Obtiene el HTML de la página que se busca.
+ * @param {string} url - URL de la página que quiere obtener.
+ * @returns {Promise<Document | void>} - Página.
+ */
+async function navigateTo(url) {
+    // Rellena un 75% la barra de carga de la página.
+    fillPageLoadBar(75);
+
+    try {
+        // Envía una petición fetch a la página.
+        const response = await fetch(url);
+
+        // Si ha ocurrido un Error en la petición lo envía el código de error.
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        // El HTML en texto de la página.
+        const htmlPage = await response.text();
+        
+        // Convertidor a DOM.
+        const parser = new DOMParser();
+        // Convierte el texto obtenido de la página a DOM.
+        const newPage = parser.parseFromString(htmlPage, 'text/html');
+        
+        // Rellena por completo la barra de carga de la página.
+        fillPageLoadBar(100);
+    
+        // Devuelve la página obtenida.
+        return newPage;
+    } catch(error) {
+        // Si encontro un error lo envía por consola.
+        console.error("Error al cargar la página: ", error);
+        
+        // Rellena por completo la barra de carga de la página.
+        fillPageLoadBar(100);
+    }
+}
+
+/**
+ * Cambiar el contenido de un elemento en concreto.
+ * @param {string} url - URL de la página que quiere buscar contenido.
+ * @param {string} containerID - ID del elemento al que se le quiere
+ * cambiar el contenido.
+ * @param {string} searchContainerID - ID del elemento que se busca
+ * en la nueva página.
+ * @param {boolean} addToHistory - Si se quiere agregar al historial.
+ * @returns 
+ */
+async function changeContent(url, containerID, searchContainerID, addToHistory) {
+    // Busca la página.
+    const page = await navigateTo(url);
+
+    // Si no ha recibido nada es porque no se ha encontrado
+    // o hubo un error asi que detiene la ejecución.
+    if (!page) return;
+    
+    // Si debe agregarla al historial lo agrega.
+    if (addToHistory) window.history.pushState({}, page.title, url);
+    
+    // Busca el elemento que se va a cambiar.
+    const oldContent = document.getElementById(containerID);
+    // Busca el elemento que se buscaba en la página.
+    const newContent = page.getElementById(searchContainerID);
+    
+    // Cambia el contenido por el encontrado en la página.
+    oldContent.innerHTML = newContent.innerHTML;
+}
+
+/**
+ * Lleva al usuario a la página test.
+ * @param {boolean} addToHistory - Si debe agregar la página al historial
+ * para evitar un bucle infinito agregando la misma página.
+ */
+function testNavigation(addToHistory) {
+    changeContent("/test", "containerTest", "test", addToHistory);
+}
+
+// Lleva al usuario a la página inicio.
+function navigateToHome(addToHistory) {
+    changeContent("/", "main", "main", addToHistory);
 }

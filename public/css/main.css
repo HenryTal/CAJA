@@ -3,12 +3,16 @@
     --dark-text-primary-color: #C5BDAF;
     --dark-text-secondary-color: #E6E1D9;
     --dark-nav-bg-color: #2E2E2E;
+    --dark-profile-bg-color: #353535;
+    --dark-profile-border-color: #505050;
     
     --light-bg-color: #F9F5EE;
     --light-text-primary-color: #3E3120;
     --light-text-secondary-color: #6A563D;
     --light-nav-bg-color: #F2E9DE;
-
+    --light-profile-bg-color: #e0e0e0;
+    --light-profile-border-color: #afaeae;
+    
     --primary-color: #D4BC89;
     --secondary-color: #C3AA83;
 
@@ -33,6 +37,11 @@
     --button-primary-color-hover: #3687e4;
     --button-secondary-color-hover: #D8D8D8;
 
+    --image-loading-bg-color: #3E3E3F;
+    
+    --profile-border-size: 2px;
+    --profile-size-icon: 55px;
+    
     --carousel-button-color: #656565;
     --carousel-button-color-hover: #D3D3D3;
     --carousel-item-bg-color: #353535;
@@ -80,11 +89,15 @@ body[theme="dark"] {
     --bg-color: var(--dark-bg-color);
     --text-color: var(--dark-text-secondary-color);
     --nav-bg-color: var(--dark-nav-bg-color);
+    --profile-bg-color: var(--dark-profile-bg-color);
+    --profile-border-color: var(--dark-profile-border-color);
 }
 body[theme="light"] {
     --bg-color: var(--light-bg-color);
     --text-color: var(--light-text-secondary-color);
     --nav-bg-color: var(--light-nav-bg-color);
+    --profile-bg-color: var(--light-profile-bg-color);
+    --profile-border-color: var(--light-profile-border-color);
 }
 
 .bar {
@@ -97,6 +110,7 @@ body[theme="light"] {
     width: 0;
     height: 100%;
     background-color: var(--bar-fill-color);
+    transition: .3s ease width;
 }
 
 #pageLoadBar {
@@ -177,14 +191,17 @@ body[theme="light"] {
     background-color: var(--button-secondary-color-hover);
 }
 
-.image.img-loading {
+.image {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: .2s ease opacity, .4s ease filter;
+}
+
+.image.img-loading {
     opacity: 0.4;
     filter: blur(10px);
-    transition: .2s ease opacity, .4s ease filter;
 }
 
 .image.img-loaded {

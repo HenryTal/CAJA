@@ -37,10 +37,43 @@
     padding: 0 20px;
 }
 
+.navbar .containerSettings {
+    display: flex;
+    gap: 20px;
+}
+
 .navbar #changeTheme {
     height: fit-content;
     font-size: 25px;
     align-self: center;
     color: var(--text-color);
     cursor: pointer;
+}
+
+.navbar .dataUser {
+    height: fit-content;
+    align-self: center;
+}
+
+.navbar .profile {
+    position: relative;
+    width: var(--profile-size-icon);
+    aspect-ratio: 1 / 1;
+    background-color: var(--profile-bg-color);
+    border-radius: 50%;
+    border: var(--profile-border-size) solid var(--profile-border-color);
+    overflow: hidden;
+}
+
+.navbar .profile i {
+    position: absolute;
+    bottom: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: var(--profile-size-icon);
+    text-align: center;
+}
+
+.navbar .profile:has(.img-loaded) i {
+    display: none;
 }

@@ -15,6 +15,8 @@ function loadFunctions() {
     // Carga las imágenes de la página
     imagesLoading();
 
+    loadWrappers();
+
     const buttonTestSPA = document.getElementById("testSPA");
     if (buttonTestSPA) buttonTestSPA.addEventListener("click", () => testNavigation(true));
 }
@@ -295,4 +297,53 @@ function testNavigation(addToHistory) {
 // Lleva al usuario a la página inicio.
 function navigateToHome(addToHistory) {
     changeContent("/", "main", "main", addToHistory);
+}
+
+
+
+// ╔══════════════════════════════════════════════════════════════════════╗
+// ║                                                                      ║
+// ║                        WRAPPER WITH CONTROLS                         ║
+// ║                                                                      ║
+// ╚══════════════════════════════════════════════════════════════════════╝
+
+function loadWrappers() {
+    const wrappersWithControls = document.querySelectorAll('.wrapper.controls');
+
+    wrappersWithControls.forEach(wrapper => {
+        const buttonPrev = wrapper.querySelector(".button-prev");
+        buttonPrev.addEventListener("click", () => { moveWrapperItems(wrapper, "prev") });
+        
+        const buttonNext = wrapper.querySelector(".button-next");
+        buttonNext.addEventListener("click", () => { moveWrapperItems(wrapper, -"next") });
+    });
+}
+
+function moveWrapperItems(wrapper, direction) {
+    let indexWrapper = wrapper.getAttribute("data-index");
+    indexWrapper = direction == "prev" ? parseInt(indexWrapper) - 1 : parseInt(indexWrapper) + 1;
+    
+    if (indexWrapper < 0) {
+        indexWrapper = 0;
+        return;
+    }
+    
+    const widthWrapper = wrapper.clientWidth;
+    const wrapperItems = wrapper.querySelector(".wrapper-items");
+
+    const widthItem = wrapperItems.children[0].clientWidth;
+    
+    const itemsPerPage = Math.floor(widthWrapper / widthItem);
+    const gapItems = Math.floor((widthWrapper - (widthItem * itemsPerPage)) / (itemsPerPage - 1));
+
+    const totalWidthWrapperItems = ((widthItem * (wrapperItems.children.length)) + (gapItems * (wrapperItems.children.length - 1)));
+    const newPage = ((gapItems + widthWrapper) * indexWrapper);
+    const missingWidth = (totalWidthWrapperItems - newPage);
+
+    wrapper.setAttribute("data-index", indexWrapper);
+
+    console.log(`${widthItem} | ${totalWidthWrapperItems} - ${newPage} = ${missingWidth} (${Math.abs((missingWidth) - widthWrapper)})`);
+
+    // wrapperItems.style.left = `${widthWrapper * -indexWrapper}px`;
+    wrapperItems.style.left = `-${newPage}px`;
 }

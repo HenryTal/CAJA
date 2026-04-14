@@ -4,8 +4,8 @@
   "description": "Trabajo de final de grado en Formación Profesional Grado Superior en Desarrollo de Aplicaciones Web.",
   "main": "index.js",
   "scripts": {
-    "start": "node .",
-    "dev": "nodemon ."
+    "start": "start http://127.0.0.1:3010/ && node .",
+    "dev": "start http://127.0.0.1:3010/ && code . && nodemon ."
   },
   "keywords": [],
   "author": "Henry Talavera",

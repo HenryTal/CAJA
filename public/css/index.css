@@ -1,0 +1,21 @@
+.section.trending .wrapper {
+    --items-shown: 5;
+    --wrapper-items-gap: 16px;
+}
+
+.section.trending .wrapper-items {
+    position: relative;
+    flex-wrap: nowrap;
+    left: 0;
+    transition: .2s ease left;
+}
+
+.section.trending .wrapper-item {
+    width: calc((100% - ((var(--items-shown) - 1) * var(--wrapper-items-gap))) / var(--items-shown));
+}
+
+.section.trending .wrapper-item .item-image.cover {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: 8px;
+}

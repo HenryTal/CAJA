@@ -20,8 +20,8 @@
     --text-weight: 500;
     --text-size: 16px;
 
-    --navbar-container-max-width: 1400px;
-    --container-max-width: 1200px;
+    --navbar-container-max-width: 1600px;
+    --container-max-width: 1400px;
 
     --bar-bg-color: #FFFFFF50;
     --bar-fill-color: var(--primary-color);
@@ -45,6 +45,8 @@
     --carousel-button-color: #656565;
     --carousel-button-color-hover: #D3D3D3;
     --carousel-item-bg-color: #353535;
+
+    --wrapper-items-gap: 10px;
 }
 
 /* Variante Regular */
@@ -329,4 +331,24 @@ body[theme="light"] {
 .price .older::after, .price .now::after {
     content: "€";
     margin-left: 3px;
+}
+
+.wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.wrapper .wrapper-items {
+    display: flex;
+    gap: var(--wrapper-items-gap);
+}
+
+.wrapper .wrapper-item {
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.wrapper .item-image {
+    background-color: var(--image-loading-bg-color);
 }

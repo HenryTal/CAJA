@@ -283,6 +283,9 @@ async function changeContent(url, containerID, searchContainerID, addToHistory) 
     
     // Cambia el contenido por el encontrado en la página.
     oldContent.innerHTML = newContent.innerHTML;
+
+    // Cargar las imagenes que acaban de insertarse.
+    imagesLoading();
 }
 
 /**

@@ -77,3 +77,29 @@
 .navbar .profile:has(.img-loaded) i {
     display: none;
 }
+
+.navbar #statusConnection {
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    font-size: var(--subtitle-size);
+    text-align: center;
+    font-weight: var(--subtitle-weight);
+    transform: translateY(-30%);
+    opacity: 0;
+    background-color: transparent;
+    transition: .3s ease opacity, .3s ease transform, .3s ease background-color;
+}
+.navbar #statusConnection.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+.navbar #statusConnection.success {
+    background-color: var(--status-color-success);
+}
+.navbar #statusConnection.warn {
+    background-color: var(--status-color-warn);
+}
+.navbar #statusConnection.failed {
+    background-color: var(--status-color-failed);
+}

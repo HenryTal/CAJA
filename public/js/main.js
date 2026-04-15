@@ -14,6 +14,8 @@ function loadFunctions() {
 
     // Carga las imágenes de la página
     imagesLoading();
+    
+    startCarousel();
 
     loadWrappers();
 
@@ -108,6 +110,19 @@ window.addEventListener("popstate", async () => {
             break;
     }
 });
+
+window.addEventListener("offline", () => { notifyUser("connection", "failed", "No tienes conexión a internet"); });
+window.addEventListener("online", () => { notifyUser("connection", "success", "Vuelves a tener conexión a internet"); });
+
+function notifyUser(type, state, message) {
+    let container = document.querySelector("#statusConnection");
+    container.className = `show ${state}`;
+
+    const messageContainer = container.querySelector(".message");
+    messageContainer.textContent = message;
+
+    if (state == "success") setTimeout(() => { container.classList.remove("show", "success") }, 5000);
+}
 
 
 
@@ -247,8 +262,12 @@ async function navigateTo(url) {
         // Devuelve la página obtenida.
         return newPage;
     } catch(error) {
-        // Si encontro un error lo envía por consola.
-        console.error("Error al cargar la página: ", error);
+        if (!navigator.onLine) {
+            console.error("El usuario no tiene conexión a internet");
+        } else {
+            // Si encontro un error lo envía por consola.
+            console.error("No se ha podido conectar con el servidor: ", error);
+        }
         
         // Rellena por completo la barra de carga de la página.
         fillPageLoadBar(100);

@@ -9,6 +9,9 @@
     --dark-wrapper-button-bg-color: #272727;
     --dark-wrapper-button-disabled-bg-color: #1E1E1E;
     --dark-wrapper-item-hover-bg-color: #1E1E1E;
+    --dark-status-color-success: #42BE65;
+    --dark-status-color-warn: #FF832B;
+    --dark-status-color-failed: #FA4D56;
     
     --light-bg-color: #F9F5EE;
     --light-subtitle-color: #574f46;
@@ -20,23 +23,26 @@
     --light-wrapper-button-bg-color: #e7e7e7;
     --light-wrapper-button-disabled-bg-color: #bbbbbb;
     --light-wrapper-item-hover-bg-color: #bbbbbb;
+    --light-status-color-success: #24A148;
+    --light-status-color-warn: #FF832B;
+    --light-status-color-failed: #DA1E28;
     
     --primary-color: #D4BC89;
     --secondary-color: #C3AA83;
-
+    
     --subtitle-weight: 600;
     --subtitle-size: 14px;
-
+    
     --text-family: "Nunito";
     --text-weight: 500;
     --text-size: 16px;
-
+    
     --navbar-container-max-width: 1600px;
     --container-max-width: 1400px;
-
+    
     --bar-bg-color: #FFFFFF50;
     --bar-fill-color: var(--primary-color);
-
+    
     --button-color: var(--secondary-color);
     --button-text-color: #E0E0E0;
     --button-text-size: 15px;
@@ -47,7 +53,7 @@
     --button-primary-color: #2274d2;
     --button-primary-color-hover: #3687e4;
     --button-secondary-color-hover: #D8D8D8;
-
+    
     --image-loading-bg-color: #3E3E3F;
     
     --profile-border-size: 2px;
@@ -56,26 +62,26 @@
     --carousel-button-color: #656565;
     --carousel-button-color-hover: #D3D3D3;
     --carousel-item-bg-color: #353535;
-
+    
     --wrapper-items-gap: 10px;
 }
 
 /* Variante Regular */
 @font-face {
-  font-family: "Nunito";
-  src: url('../fonts/Nunito-VariableFont_wght.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+    font-family: "Nunito";
+    src: url('../fonts/Nunito-VariableFont_wght.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
 }
 
 /* Variante Italic */
 @font-face {
-  font-family: "Nunito";
-  src: url('../fonts/Nunito-Italic-VariableFont_wght.ttf') format('truetype');
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
+    font-family: "Nunito";
+    src: url('../fonts/Nunito-Italic-VariableFont_wght.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
 }
 
 * {
@@ -109,6 +115,9 @@ body[theme="dark"] {
     --wrapper-button-bg-color: var(--dark-wrapper-button-bg-color);
     --wrapper-button-disabled-bg-color: var(--dark-wrapper-button-disabled-bg-color);
     --wrapper-item-hover-bg-color: var(--dark-wrapper-item-hover-bg-color);
+    --status-color-success: var(--dark-status-color-success);
+    --status-color-warn: var(--dark-status-color-warn);
+    --status-color-failed: var(--dark-status-color-failed);
 }
 body[theme="light"] {
     --bg-color: var(--light-bg-color);
@@ -121,6 +130,9 @@ body[theme="light"] {
     --wrapper-button-bg-color: var(--light-wrapper-button-bg-color);
     --wrapper-button-disabled-bg-color: var(--light-wrapper-button-disabled-bg-color);
     --wrapper-item-hover-bg-color: var(--light-wrapper-item-hover-bg-color);
+    --status-color-success: var(--light-status-color-success);
+    --status-color-warn: var(--light-status-color-warn);
+    --status-color-failed: var(--light-status-color-failed);
 }
 
 .bar {

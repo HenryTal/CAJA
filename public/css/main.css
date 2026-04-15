@@ -1,20 +1,31 @@
 :root {
     --dark-bg-color: #1A1A1A;
+    --dark-subtitle-color: #bdbdbd;
     --dark-text-primary-color: #C5BDAF;
     --dark-text-secondary-color: #E6E1D9;
     --dark-nav-bg-color: #2E2E2E;
     --dark-profile-bg-color: #353535;
     --dark-profile-border-color: #505050;
+    --dark-wrapper-button-bg-color: #272727;
+    --dark-wrapper-button-disabled-bg-color: #1E1E1E;
+    --dark-wrapper-item-hover-bg-color: #1E1E1E;
     
     --light-bg-color: #F9F5EE;
+    --light-subtitle-color: #574f46;
     --light-text-primary-color: #3E3120;
     --light-text-secondary-color: #6A563D;
     --light-nav-bg-color: #F2E9DE;
     --light-profile-bg-color: #e0e0e0;
     --light-profile-border-color: #afaeae;
+    --light-wrapper-button-bg-color: #e7e7e7;
+    --light-wrapper-button-disabled-bg-color: #bbbbbb;
+    --light-wrapper-item-hover-bg-color: #bbbbbb;
     
     --primary-color: #D4BC89;
     --secondary-color: #C3AA83;
+
+    --subtitle-weight: 600;
+    --subtitle-size: 14px;
 
     --text-family: "Nunito";
     --text-weight: 500;
@@ -89,17 +100,27 @@ body {
 }
 body[theme="dark"] {
     --bg-color: var(--dark-bg-color);
+    --title-color: var(--dark-text-primary-color);
+    --subtitle-color: var(--dark-subtitle-color);
     --text-color: var(--dark-text-secondary-color);
     --nav-bg-color: var(--dark-nav-bg-color);
     --profile-bg-color: var(--dark-profile-bg-color);
     --profile-border-color: var(--dark-profile-border-color);
+    --wrapper-button-bg-color: var(--dark-wrapper-button-bg-color);
+    --wrapper-button-disabled-bg-color: var(--dark-wrapper-button-disabled-bg-color);
+    --wrapper-item-hover-bg-color: var(--dark-wrapper-item-hover-bg-color);
 }
 body[theme="light"] {
     --bg-color: var(--light-bg-color);
+    --title-color: var(--light-text-primary-color);
+    --subtitle-color: var(--light-subtitle-color);
     --text-color: var(--light-text-secondary-color);
     --nav-bg-color: var(--light-nav-bg-color);
     --profile-bg-color: var(--light-profile-bg-color);
     --profile-border-color: var(--light-profile-border-color);
+    --wrapper-button-bg-color: var(--light-wrapper-button-bg-color);
+    --wrapper-button-disabled-bg-color: var(--light-wrapper-button-disabled-bg-color);
+    --wrapper-item-hover-bg-color: var(--light-wrapper-item-hover-bg-color);
 }
 
 .bar {
@@ -290,7 +311,7 @@ body[theme="light"] {
     max-height: 100%;
     top: 0;
     right: 0;
-    background: linear-gradient(to right, transparent 0%, #00000020 var(--blurring));
+    background: linear-gradient(to right, transparent 0%, #00000080 var(--blurring));
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -305,6 +326,9 @@ body[theme="light"] {
     background-color: var(--text-color);
     border-radius: 8px;
 }
+.carousel-item .info .cover:has(.img-loaded) {
+    background-color: transparent;
+}
 
 .price {
     display: flex;
@@ -313,7 +337,7 @@ body[theme="light"] {
 }
 
 .price .offer {
-    background-color: var(--primary-color);
+    background-color: var(--secondary-color);
     padding: 3px 5px;
     border-radius: 2px;
 }
@@ -325,10 +349,10 @@ body[theme="light"] {
     margin-left: 3px;
 }
 
-.price .older {
+.price .base {
     text-decoration: line-through;
 }
-.price .older::after, .price .now::after {
+.price .base::after, .price .now::after {
     content: "€";
     margin-left: 3px;
 }
@@ -351,4 +375,14 @@ body[theme="light"] {
 
 .wrapper .item-image {
     background-color: var(--image-loading-bg-color);
+}
+
+.item-content .type {
+    font-size: var(--subtitle-size);
+    font-weight: var(--subtitle-weight);
+    color: var(--subtitle-color);
+}
+
+.title {
+    color: var(--title-color);
 }

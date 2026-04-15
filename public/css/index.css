@@ -1,5 +1,5 @@
 .section.trending .wrapper {
-    --items-shown: 5;
+    --items-shown: 6;
     --wrapper-items-gap: 16px;
 }
 
@@ -11,11 +11,51 @@
 }
 
 .section.trending .wrapper-item {
+    position: relative;
     width: calc((100% - ((var(--items-shown) - 1) * var(--wrapper-items-gap))) / var(--items-shown));
+    padding: 5px;
+    transition: .2s ease background-color;
+}
+a.wrapper-item {
+    text-decoration: none;
+    color: var(--text-color);
 }
 
 .section.trending .wrapper-item .item-image.cover {
     width: 100%;
     aspect-ratio: 3 / 4;
     border-radius: 8px;
+    overflow: hidden;
+}
+.section.trending .wrapper-item .item-image.cover img {
+    transition: .3s ease scale;
+}
+.section.trending .wrapper-item:hover {
+    background-color: var(--wrapper-item-hover-bg-color);
+}
+.section.trending .wrapper-item:hover .item-image.cover img {
+    scale: 1.05;
+}
+
+.section.trending .wrapper-buttons {
+    display: flex;
+    justify-content: end;
+    gap: 10px;
+    margin: 0 0 10px 0;
+}
+
+.section.trending .wrapper-button {
+    width: 30px;
+    height: 30px;
+    background-color: var(--wrapper-button-bg-color);
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.section.trending .wrapper.start .button-prev, .section.trending .wrapper.end .button-next {
+    background-color: var(--wrapper-button-disabled-bg-color);
+    cursor: default;
 }

@@ -316,7 +316,31 @@ function loadWrappers() {
         
         const buttonNext = wrapper.querySelector(".button-next");
         buttonNext.addEventListener("click", () => { moveWrapperItems(wrapper, -"next") });
+
+        applyDiscounts(wrapper);
     });
+}
+
+function applyDiscounts(wrapper) {
+    const prices = wrapper.querySelectorAll(".price");
+
+    prices.forEach(price => {
+        let offer = price.querySelector(".offer")
+        
+        if (!offer) return;
+
+        offer = offer.textContent;
+        const priceBase = price.querySelector(".base").textContent;
+
+        const discount = (offer * priceBase) / 100;
+        const priceWithOffer = Math.trunc((priceBase - discount) * 100) / 100;
+
+        const priceWithOfferContainer = document.createElement("span");
+        priceWithOfferContainer.classList.add("now");
+        priceWithOfferContainer.textContent = priceWithOffer;
+
+        price.append(priceWithOfferContainer);
+    })
 }
 
 function moveWrapperItems(wrapper, direction) {
@@ -336,14 +360,28 @@ function moveWrapperItems(wrapper, direction) {
     const itemsPerPage = Math.floor(widthWrapper / widthItem);
     const gapItems = Math.floor((widthWrapper - (widthItem * itemsPerPage)) / (itemsPerPage - 1));
 
-    const totalWidthWrapperItems = ((widthItem * (wrapperItems.children.length)) + (gapItems * (wrapperItems.children.length - 1)));
-    const newPage = ((gapItems + widthWrapper) * indexWrapper);
-    const missingWidth = (totalWidthWrapperItems - newPage);
+    const numberPages = (wrapperItems.children.length / itemsPerPage);
+
+    if (indexWrapper > numberPages) {
+        indexWrapper = numberPages;
+        return;
+    }
+
+    let newPage = ((gapItems + widthWrapper) * indexWrapper);
+
+    const missingWidth = ((numberPages - 1) * widthWrapper) + ((numberPages - 1) * gapItems);
+
+    if (newPage > missingWidth) newPage = missingWidth;
 
     wrapper.setAttribute("data-index", indexWrapper);
 
-    console.log(`${widthItem} | ${totalWidthWrapperItems} - ${newPage} = ${missingWidth} (${Math.abs((missingWidth) - widthWrapper)})`);
+    if (indexWrapper == Math.floor(numberPages)) {
+        wrapper.classList.add("end");
+        wrapper.classList.remove("start");
+    } else if (indexWrapper == 0) {
+        wrapper.classList.add("start");
+        wrapper.classList.remove("end");
+    } 
 
-    // wrapperItems.style.left = `${widthWrapper * -indexWrapper}px`;
     wrapperItems.style.left = `-${newPage}px`;
 }

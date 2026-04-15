@@ -49,6 +49,8 @@ function startCarousel() {
         // // Agrega un evento para ir al siguiente elemento en el carrusel.
         // buttonNext.addEventListener("click", async () => index = await nextItem(itemsContainer, items, index));
 
+        applyDiscounts(carousel);
+
         // Si tiene la clase "autoslide" agrega un intervalo para
         // cambiar el elemento mostrado en el carrusel automáticamente.
         if (carousel.classList.contains("autoslide")) 

@@ -1,3 +1,5 @@
+window.addEventListener("load", startCarousel);
+
 // Método que define las variables necesarias para
 // el funcionamiento del carrusel de elementos básico
 // e iniciarlo.

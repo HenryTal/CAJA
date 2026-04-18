@@ -57,5 +57,5 @@ a.wrapper-item {
 }
 .section.trending .wrapper.start .button-prev, .section.trending .wrapper.end .button-next {
     background-color: var(--wrapper-button-disabled-bg-color);
-    cursor: default;
+    cursor: not-allowed;
 }

@@ -15,8 +15,6 @@ function loadFunctions() {
     // Carga las imágenes de la página
     imagesLoading();
     
-    startCarousel();
-
     loadWrappers();
 
     const buttonTestSPA = document.getElementById("testSPA");
@@ -82,10 +80,9 @@ window.addEventListener("click", (e) => {
     
     // La URL en el enlace.
     const url = anchor.href.split(window.location.origin)[1];
-    
-    // Si la URL destino es la página de Inicio.
-    if (url == "/") navigateToHome(true);
-})    
+
+    changePage(url, true);
+});
 
 
 // Agrega un evento para cuando el usuario navega por el
@@ -94,21 +91,7 @@ window.addEventListener("popstate", async () => {
     // La página de destino.
     const destinationURL = window.location.pathname;
 
-    // Los casos de posibles páginas a las que quiere ir el usuario.
-    switch (destinationURL) {
-        case "/":
-            // Lleva a la página Inicio.
-            navigateToHome();
-            break;
-    
-        case "/test":
-            // Lleva a la página test.
-            testNavigation(false);
-            break;
-
-        default:
-            break;
-    }
+    changePage(destinationURL, false);
 });
 
 window.addEventListener("offline", () => { notifyUser("connection", "failed", "No tienes conexión a internet"); });
@@ -294,6 +277,33 @@ async function changeContent(url, containerID, searchContainerID, addToHistory) 
     
     // Si debe agregarla al historial lo agrega.
     if (addToHistory) window.history.pushState({}, page.title, url);
+
+    let newStyles = Array.from(page.querySelectorAll('link[rel="stylesheet"]'));
+    let oldStyles = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
+    oldStyles = oldStyles;
+    
+    stylesToLoad = newStyles.filter(newStyle => !oldStyles.some(oldStyle => oldStyle.href === newStyle.href));
+    
+    let newScripts = Array.from(page.querySelectorAll("script"));
+    let oldScripts = Array.from(document.querySelectorAll("script"));
+    
+    scriptsToLoad = newScripts.filter(newScript => !oldScripts.some(oldScript => oldScript.src === newScript.src));
+
+    stylesToLoad.forEach(style => {
+        document.head.appendChild(style);
+    });
+    scriptsToLoad.forEach(script => {
+        const newScript = document.createElement("script");
+        newScript.src = script.src;
+
+        newScript.onload = () => {
+            if (typeof startCarousel === "function") {
+                startCarousel();
+            }
+        }
+
+        document.body.appendChild(newScript);
+    });
     
     // Busca el elemento que se va a cambiar.
     const oldContent = document.getElementById(containerID);
@@ -305,6 +315,26 @@ async function changeContent(url, containerID, searchContainerID, addToHistory) 
 
     // Cargar las funciones a los elementos que deberian tener.
     loadFunctions();
+}
+
+function changePage(url, addToHistory) {
+    // Los casos de posibles páginas a las que quiere ir el usuario.
+    switch (url) {
+        case "/":
+            // Lleva a la página Inicio.
+            navigateToHome(addToHistory);
+            break;
+    
+        case "/test":
+            // Lleva a la página test.
+            testNavigation(addToHistory);
+            break;
+
+        default:
+            changeContent(url, "main", "main", addToHistory);
+
+            break;
+    }
 }
 
 /**
@@ -329,81 +359,146 @@ function navigateToHome(addToHistory) {
 // ║                                                                      ║
 // ╚══════════════════════════════════════════════════════════════════════╝
 
+// Método para cargar todas las funciones de los wrappers con controles.
 function loadWrappers() {
+    // Busca todos los wrapper que tengan la clase "controls".
     const wrappersWithControls = document.querySelectorAll('.wrapper.controls');
 
+    // Por cada uno de los encontrados.
     wrappersWithControls.forEach(wrapper => {
+        // Busca su botón "anterior".
         const buttonPrev = wrapper.querySelector(".button-prev");
+        // Agrega un evento para cuando el usuario haga clic en el.
         buttonPrev.addEventListener("click", () => { moveWrapperItems(wrapper, "prev") });
         
+        // Busca su botón "siguiente".
         const buttonNext = wrapper.querySelector(".button-next");
-        buttonNext.addEventListener("click", () => { moveWrapperItems(wrapper, -"next") });
+        // Agrega un evento para cuando el usuario haga clic en el.
+        buttonNext.addEventListener("click", () => { moveWrapperItems(wrapper, "next") });
 
+        // Aplica los descuentos a los juegos dentro del wrapper.
         applyDiscounts(wrapper);
+        // Actualiza los botones del wrapper.
+        moveWrapperItems(wrapper);
     });
 }
 
+/**
+ * Aplica los descuentos a los precios de los juegos.
+ * @param {HTMLDivElement} wrapper - El wrapper en el que se buscaran precios.
+ */
 function applyDiscounts(wrapper) {
+    // Busca todos los precios en el contenedor.
     const prices = wrapper.querySelectorAll(".price");
 
+    // Por cada uno de ellos.
     prices.forEach(price => {
+        // Busca el descuento.
         let offer = price.querySelector(".offer")
         
+        // Si no tiene termina la ejecución.
         if (!offer) return;
 
+        // Define de cuanto es el descuento.
         offer = offer.textContent;
+        // Busca el precio base.
         const priceBase = price.querySelector(".base").textContent;
 
+        // Aplica el descuento al precio.
         const discount = (offer * priceBase) / 100;
+        // Deja solo 2 decimales.
         const priceWithOffer = Math.trunc((priceBase - discount) * 100) / 100;
 
+        // Crea un elemento <span>.
         const priceWithOfferContainer = document.createElement("span");
+        // Le agrega la clase "now".
         priceWithOfferContainer.classList.add("now");
+        // Agrega el precio con descuento.
         priceWithOfferContainer.textContent = priceWithOffer;
 
+        // Lo agrega al precio para ser mostrado.
         price.append(priceWithOfferContainer);
     })
 }
 
+/**
+ * Mover los elementos de un wrapper.
+ * @param {HTMLDivElement} wrapper - El wrapper al que se le moveran los elementos.
+ * @param {String} direction - La dirección a la que sera movido.
+ * @returns
+ */
 function moveWrapperItems(wrapper, direction) {
+    // El inidice actual de el wrapper.
     let indexWrapper = wrapper.getAttribute("data-index");
-    indexWrapper = direction == "prev" ? parseInt(indexWrapper) - 1 : parseInt(indexWrapper) + 1;
-    
+    // Si se ha indicado una dirección aumenta o disminuye el indice.
+    if (direction != null) indexWrapper = direction == "prev" ? parseInt(indexWrapper) - 1 : parseInt(indexWrapper) + 1;
+
+    // Si el indice ahora es negativo lo pasa a 0
+    // y termina la ejecución.
     if (indexWrapper < 0) {
         indexWrapper = 0;
         return;
     }
     
+    // El ancho de el wrapper.
     const widthWrapper = wrapper.clientWidth;
+    // Los elementos dentro de el wrapper.
     const wrapperItems = wrapper.querySelector(".wrapper-items");
 
+    // El ancho de un elemento en el wrapper.
     const widthItem = wrapperItems.children[0].clientWidth;
     
+    // Calcula cuantos elementos se muestran por página
+    // usando el ancho del wrapper y el de un elemento.
     const itemsPerPage = Math.floor(widthWrapper / widthItem);
+    // Calcula cuanta separación hay entre cada elemento de el wrapper
+    // restando el espacio sobrante de el ancho de el wrapper y
+    // el ancho sumado de todos los elementos de una página.
     const gapItems = Math.floor((widthWrapper - (widthItem * itemsPerPage)) / (itemsPerPage - 1));
 
+    // Calcula la cantidad de páginas que se necesitan.
     const numberPages = (wrapperItems.children.length / itemsPerPage);
 
+    // Si el indice actual es mayor al numero de páginas detiene
+    // la ejecución.
     if (indexWrapper > numberPages) {
         indexWrapper = numberPages;
         return;
     }
 
+    // Cuanto debe desplazar los elementos para mostrar la siguiente página.
     let newPage = ((gapItems + widthWrapper) * indexWrapper);
 
+    // Calcula cuanto es el desplazamiento que habria si la última página no tiene
+    // los elementos suficientes para rellenar el wrapper.
     const missingWidth = ((numberPages - 1) * widthWrapper) + ((numberPages - 1) * gapItems);
 
+    // Si el desplazamiento es mayor al espacio anterior en lugar de mostrar el
+    // espacio vacio simplemento lo establece.
     if (newPage > missingWidth) newPage = missingWidth;
 
+    // Cambia el indice en el wrapper.
     wrapper.setAttribute("data-index", indexWrapper);
 
-    if (indexWrapper == Math.floor(numberPages)) {
+    // Si solo hay una página agrega estas clases para desactivar
+    // visualmente los botones.
+    if (numberPages == 1) {
+        wrapper.classList.add("start", "end");
+    } else if (indexWrapper == Math.floor(numberPages)) {
+        // Si el indice es igual a la cantidad de páginas desactiva
+        // visualmente el boton "siguiente".
         wrapper.classList.add("end");
         wrapper.classList.remove("start");
     } else if (indexWrapper == 0) {
+        // Si el indice es igual a 0 desactiva visualmente el boton "anterior".
         wrapper.classList.add("start");
         wrapper.classList.remove("end");
-    } 
+    } else {
+        // Si el indice no es ninguno de los casos anteriores activa
+        // visualmente ambos botones.
+        wrapper.classList.remove("start", "end");
+    }
 
+    // Desplaza los elementos.
     wrapperItems.style.left = `-${newPage}px`;
 }

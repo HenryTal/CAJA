@@ -4,6 +4,7 @@
     --dark-text-primary-color: #C5BDAF;
     --dark-text-secondary-color: #E6E1D9;
     --dark-nav-bg-color: #2E2E2E;
+    --dark-nav-menu-bg-color: #1f1e1e;
     --dark-profile-bg-color: #353535;
     --dark-profile-border-color: #505050;
     --dark-wrapper-button-bg-color: #272727;
@@ -12,12 +13,15 @@
     --dark-status-color-success: #42BE65;
     --dark-status-color-warn: #FF832B;
     --dark-status-color-failed: #FA4D56;
+    --dark-form-bg-color: #575757;
+    --dark-input-error-color: #E65100;
     
     --light-bg-color: #F9F5EE;
     --light-subtitle-color: #574f46;
     --light-text-primary-color: #3E3120;
     --light-text-secondary-color: #6A563D;
     --light-nav-bg-color: #F2E9DE;
+    --light-nav-menu-bg-color: #c2bab0;
     --light-profile-bg-color: #e0e0e0;
     --light-profile-border-color: #afaeae;
     --light-wrapper-button-bg-color: #e7e7e7;
@@ -26,6 +30,8 @@
     --light-status-color-success: #24A148;
     --light-status-color-warn: #FF832B;
     --light-status-color-failed: #DA1E28;
+    --light-form-bg-color: #E8E8E8;
+    --light-input-error-color: #E65100;
     
     --primary-color: #D4BC89;
     --secondary-color: #C3AA83;
@@ -95,7 +101,7 @@ p, span, h1, h2, h3, h4, h5 {
 
 body {
     width: 100%;
-    min-height: 120vh;
+    /* min-height: 120vh; */
     background-color: var(--bg-color);
     font-family: var(--text-family);
     font-weight: var(--text-weight);
@@ -110,6 +116,7 @@ body[theme="dark"] {
     --subtitle-color: var(--dark-subtitle-color);
     --text-color: var(--dark-text-secondary-color);
     --nav-bg-color: var(--dark-nav-bg-color);
+    --nav-menu-bg-color: var(--dark-nav-menu-bg-color);
     --profile-bg-color: var(--dark-profile-bg-color);
     --profile-border-color: var(--dark-profile-border-color);
     --wrapper-button-bg-color: var(--dark-wrapper-button-bg-color);
@@ -118,6 +125,8 @@ body[theme="dark"] {
     --status-color-success: var(--dark-status-color-success);
     --status-color-warn: var(--dark-status-color-warn);
     --status-color-failed: var(--dark-status-color-failed);
+    --form-bg-color: var(--dark-form-bg-color);
+    --input-error-color: var(--dark-input-error-color);
 }
 body[theme="light"] {
     --bg-color: var(--light-bg-color);
@@ -125,6 +134,7 @@ body[theme="light"] {
     --subtitle-color: var(--light-subtitle-color);
     --text-color: var(--light-text-secondary-color);
     --nav-bg-color: var(--light-nav-bg-color);
+    --nav-menu-bg-color: var(--light-nav-menu-bg-color);
     --profile-bg-color: var(--light-profile-bg-color);
     --profile-border-color: var(--light-profile-border-color);
     --wrapper-button-bg-color: var(--light-wrapper-button-bg-color);
@@ -133,6 +143,8 @@ body[theme="light"] {
     --status-color-success: var(--light-status-color-success);
     --status-color-warn: var(--light-status-color-warn);
     --status-color-failed: var(--light-status-color-failed);
+    --form-bg-color: var(--light-form-bg-color);
+    --input-error-color: var(--light-input-error-color);
 }
 
 .bar {
@@ -397,4 +409,200 @@ body[theme="light"] {
 
 .title {
     color: var(--title-color);
+}
+
+
+
+form {
+    background-color: var(--form-bg-color);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.field-multiple {
+    display: flex;
+    gap: 15px;
+}
+
+.field-multiple .field {
+    width: 100%;
+}
+
+.field {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+}
+
+.field input, .field select {
+    --input-color: var(--text-color);
+
+    background-color: transparent;
+    outline: none;
+    border: 2px solid var(--input-color);
+    border-radius: 8px;
+    padding: 12px;
+    z-index: 2;
+    transition: .2s ease border;
+}
+.field input:focus, .field select:focus {
+    --input-color: var(--primary-color);
+}
+.field input::placeholder {
+    opacity: 0;
+}
+.field::after {
+    content: attr(data-label);
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background-color: var(--form-bg-color);
+    color: var(--input-color);
+    padding: 0 4px;
+    transition: .2s ease top, .2s ease font-size, .2s ease color;
+    z-index: 1;
+}
+.field:has(input:not(:placeholder-shown))::after, .field:has(select:valid)::after {
+    --input-color: var(--text-color);
+
+    top: -9px;
+    font-size: 12px;
+    z-index: 2;
+}
+.field:has(input:focus)::after, .field:has(select:focus)::after {
+    --input-color: var(--primary-color);
+
+    top: -9px;
+    font-size: 12px;
+    z-index: 2;
+}
+.field:has(.error) input, .field:has(.error):has(input:focus)::after, .field:has(.error):has(input:not(:placeholder-shown))::after,
+.field:has(.error) select, .field:has(.error):has(select:focus)::after, .field:has(.error):has(select:valid)::after {
+    --input-color: var(--input-error-color);
+}
+
+.field select option {
+    background-color: var(--form-bg-color);
+}
+.field select option:checked {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.field .error {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    color: var(--input-error-color);
+}
+
+.field .field-checkbox {
+    display: flex;
+    align-items: center;
+}
+.field .field-checkbox input {
+    width: 15px;
+    height: 15px;
+}
+.field .field-checkbox label {
+    padding-left: 5px;
+}
+
+.field.checkboxes-simplified:has(.field-checkbox) .wrapper {
+    gap: 5px;
+}
+
+.field.checkboxes-simplified input[type=checkbox] {
+    display: none;
+}
+.field.checkboxes-simplified:has(input[type=checkbox]) label {
+    padding: 5px;
+    border: 2px solid var(--text-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: .2s ease border-color, .2s ease background-color, .2s ease color;
+}
+.field.checkboxes-simplified:has(input[type=checkbox]) label:hover {
+    background-color: var(--bg-color);
+}
+.field.checkboxes-simplified .field-checkbox:has(input[type=checkbox]:disabled) label {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+.field.checkboxes-simplified .field-checkbox:has(input[type=checkbox]:checked) label {
+    border-color: var(--primary-color);
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+}
+
+.switches .field:not(:first-of-type)::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 1px;
+    background-color: var(--text-color);
+    opacity: .5;
+}
+
+.field:has(.switch) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 5px 0;
+}
+
+.field .switch {
+    --switch-color: var(--text-color);
+    --switch-border-size: 2px;
+
+    position: relative;
+    width: 50px;
+    aspect-ratio: 5 / 2;
+    border: var(--switch-border-size) solid var(--switch-color);
+    border-radius: 50px;
+    transition: .2s ease border-color;
+}
+.field .switch:has(input[type=checkbox]:checked) {
+    --switch-color: var(--primary-color);
+}
+.field .switch:has(input[type=checkbox]:disabled) {
+    opacity: .5;
+}
+.field .switch::before {
+    content: "";
+    position: absolute;
+    top: var(--switch-border-size);
+    left: var(--switch-border-size);
+    display: inline-block;
+    height: calc(100% - (var(--switch-border-size) * 2));
+    aspect-ratio: 1 / 1;
+    background-color: var(--switch-color);
+    border-radius: 50%;
+    transition: .2s ease background-color, .2s ease left, .2s ease transform;
+}
+.field .switch:has(input[type=checkbox]:checked) {
+    background-color: var(--primary-color);
+}
+.field .switch:has(input[type=checkbox]:checked)::before {
+    left: calc(100% - var(--switch-border-size));
+    background-color: var(--bg-color);
+    transform: translateX(-100%);
+}
+
+.field .switch input {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 110%;
+    height: 150%;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px var(--form-bg-color) inset !important;
 }

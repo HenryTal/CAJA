@@ -103,3 +103,51 @@
 .navbar #statusConnection.failed {
     background-color: var(--status-color-failed);
 }
+
+.navbar .settings {
+    --nav-menu-padding: 10px;
+
+    position: absolute;
+    transform: translate(-70%, 12px);
+    background-color: var(--nav-menu-bg-color);
+    padding: var(--nav-menu-padding);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+}
+.navbar .settings::before {
+    content: "";
+    position: absolute;
+    top: -10px; 
+    right: 5px;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid var(--nav-menu-bg-color);
+}
+
+.navbar .settings .item-settings i {
+    margin-right: 8px;
+}
+
+.navbar .settings .item-settings a {
+    display: block;
+    padding: 5px 15px;
+    border-radius: 8px;
+    color: var(--text-color);
+    transition: .3s ease background-color;
+}
+.navbar .settings .item-settings a:hover {
+    background-color: var(--nav-bg-color);
+}
+
+.navbar .settings .split-settings {
+    width: calc(100% + (var(--nav-menu-padding) * 2));
+    height: 1px;
+    background-color: var(--text-color);
+    transform: translateX(calc(var(--nav-menu-padding) * -1));
+    margin: 5px 0;
+}

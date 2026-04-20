@@ -1,15 +1,26 @@
+<link rel="stylesheet" href="/css/login.css">
 <div id="main">
     <div class="section">
         <div class="container">
             <form autocomplete="on" method="post">
+                <h2 class="title">Inicia Sesión con tu Cuenta</h2>
                 <div class="field email" data-label="Correo Electronico">
                     <input type="email" name="email" id="email" placeholder="Correo Electronico" required>
                 </div>
                 <div class="field password" data-label="Contraseña">
+                    <button class="button show-password" type="button"><i class="ri-eye-close-line"></i></button>
                     <input type="password" name="password" id="password" placeholder="Contraseña" required>
                 </div>
                 <button type="submit" class="button button-primary">Iniciar Sesión</button>
+                <div class="info">
+                    <p class="register-info">¿Aún no tienes una cuenta? <a href="/auth/register" class="link">Registrarse</a></p>
+                    <p class="password-forgotten"> <a href="/auth/register" class="link">¿Has olvidado tu contraseña?</a></p>
+                </div>
             </form>
+            <ul class="terms">
+                <li class="item-list"><a href="/" class="link">Terminos y Condiciones</a></li>
+            </ul>
         </div>
     </div>
 </div>
+<script src="/js/login.js"></script>

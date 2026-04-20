@@ -19,6 +19,9 @@ function loadFunctions() {
 
     const buttonTestSPA = document.getElementById("testSPA");
     if (buttonTestSPA) buttonTestSPA.addEventListener("click", () => testNavigation(true));
+
+    const menuUser = document.getElementById("dataUser");
+    menuUser.addEventListener("click", toggleMenuUser);
 }
 
 
@@ -105,6 +108,71 @@ function notifyUser(type, state, message) {
     messageContainer.textContent = message;
 
     if (state == "success") setTimeout(() => { container.classList.remove("show", "success") }, 5000);
+}
+
+function toggleMenuUser() {
+    const menuUser = document.getElementById("dataUser").querySelector(".settings");
+    menuUser.innerHTML = "";
+    menuUser.classList.toggle("show");
+
+    const menuElements = [];
+
+    menuElements.push(createElementMenu("settings", "link", "ri-settings-5-line", "Configuración", "/settings"));
+    menuElements.push(createElementMenu("settings", "split"));
+
+    const isRegistered = true;
+
+    if (isRegistered) {
+        menuElements.unshift(
+            createElementMenu("settings", "link", "ri-user-line", "Perfil", "/user"),
+            createElementMenu("settings", "link", "ri-book-shelf-line", "Biblioteca", "/library"),
+            createElementMenu("settings", "link", "ri-heart-line", "Lista de Deseos", "/wishlist")
+        );
+
+        menuElements.push(createElementMenu("settings", "link", "ri-logout-box-line", "Cerrar Sesión", "/auth/logout"));
+    } else {
+        menuElements.push(
+            createElementMenu("settings", "link", "ri-login-box-line", "Iniciar Sesión", "/auth/login"),
+            createElementMenu("settings", "link", "ri-user-add-line", "Registrarse", "/auth/register")
+        );
+    }
+
+    menuElements.forEach((element) => {
+        menuUser.append(element);
+    })
+}
+
+/**
+ * Crea un Elemento para el menu con los parametros que se le indiquen.
+ * @param {String} menu - El nombre del menu.
+ * @param {"split" | "link"} type - El tipo de elemento.
+ * @param {String} icon - La clase del icono para el elemento.
+ * @param {String} legend - El texto que tendra el elemento.
+ * @param {URL} url - La URL si el elemento es de tipo "link".
+ * @returns {HTMLLIElement} - Elemento para el menu.
+ */
+function createElementMenu(menu, type, icon, legend, url) {
+    const elementMenu = document.createElement("li");
+    elementMenu.className = `item-${menu}`;
+
+    if (type == "split") {
+        elementMenu.className = `split-${menu}`;
+    }
+    
+    if (type == "link") {
+        const elementLink = document.createElement("a");
+        elementLink.classList.add("link");
+        elementLink.href = url;
+        
+        const elementIcon = document.createElement("i");
+        elementIcon.classList.add(icon);
+        
+        elementLink.append(elementIcon, legend);
+        
+        elementMenu.append(elementLink);
+    }
+
+    return elementMenu;
 }
 
 

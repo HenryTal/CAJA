@@ -13,7 +13,7 @@
     --dark-status-color-success: #42BE65;
     --dark-status-color-warn: #FF832B;
     --dark-status-color-failed: #FA4D56;
-    --dark-form-bg-color: #575757;
+    --dark-form-bg-color: #3b3a36;
     --dark-input-error-color: #E65100;
     
     --light-bg-color: #F9F5EE;
@@ -30,7 +30,7 @@
     --light-status-color-success: #24A148;
     --light-status-color-warn: #FF832B;
     --light-status-color-failed: #DA1E28;
-    --light-form-bg-color: #E8E8E8;
+    --light-form-bg-color: #dbd1bf;
     --light-input-error-color: #E65100;
     
     --primary-color: #D4BC89;
@@ -55,9 +55,9 @@
     --button-text-weight: 650;
     --button-padding: 10px 15px;
     --button-border-radius: 8px;
-    --button-color-hover: #135DB1;
-    --button-primary-color: #2274d2;
-    --button-primary-color-hover: #3687e4;
+    --button-color-hover: #9e8863;
+    --button-primary-color: #c09a48;
+    --button-primary-color-hover: #997d46;
     --button-secondary-color-hover: #D8D8D8;
     
     --image-loading-bg-color: #3E3E3F;
@@ -437,12 +437,13 @@ form {
 
 .field input, .field select {
     --input-color: var(--text-color);
-
+    
     background-color: transparent;
     outline: none;
     border: 2px solid var(--input-color);
     border-radius: 8px;
     padding: 12px;
+    color: var(--text-color);
     z-index: 2;
     transition: .2s ease border;
 }

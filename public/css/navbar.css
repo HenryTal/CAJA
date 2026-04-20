@@ -50,7 +50,7 @@
     cursor: pointer;
 }
 
-.navbar .dataUser {
+.navbar #dataUser {
     height: fit-content;
     align-self: center;
 }
@@ -114,9 +114,22 @@
     border-radius: 8px;
     display: flex;
     flex-direction: column;
+    transition: .2s ease opacity;
     z-index: 2;
 }
-.navbar .settings::before {
+.navbar .settings:not(.show) {
+    top: -500px;
+    opacity: 0;
+}
+.navbar #dataUser:has(.settings.show)::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+.navbar .settings::after {
     content: "";
     position: absolute;
     top: -10px; 

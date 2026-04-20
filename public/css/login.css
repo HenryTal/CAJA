@@ -1,0 +1,45 @@
+.navbar .menu {
+    transform: translateY(-100%);
+}
+
+.section:has(form) {
+    height: 90vh;
+}
+
+.container:has(form) {
+    max-width: 700px !important;
+    top: 50%;
+    transform: translate(-50%, -50%) !important;
+}
+
+form {
+    padding: 40px;
+}
+
+form .title {
+    justify-self: center;
+    margin-bottom: 40px;
+}
+
+form .field.password .show-password {
+    position: absolute;
+    font-size: 20px;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    color: var(--text-color);
+    background-color: transparent;
+    z-index: 3;
+}
+
+form button[type="submit"] {
+    width: 100%;
+    margin-top: 50px;
+}
+
+form .info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 40px;
+}

@@ -10,7 +10,40 @@ const nombreApp = process.env.APP_NAME;
 // Definición de aplicación express.
 const app = require("./src/express");
 
-// Aplicación ejecutada en el puerto extraido desde .env o el por defecto.
-app.listen(puertoApp, () => {
-    console.log(`[ ${nombreApp} ] Página Web en el Puerto ${puertoApp}.`.green);
-});
+// Definición de la base de datos.
+const db = require("./src/db");
+
+const Juego = require("./models/Juego");
+const Tienda = require("./models/Tienda");
+
+const Juego_Tiendas = require("./models/Juego_Tiendas");
+
+async function iniciarCAJA() {
+    await db.conectar();
+
+    console.log(`[ ${nombreApp} ] Sincronizando Tablas...`.blue);
+
+    Juego.belongsToMany(Tienda, { through: Juego_Tiendas, foreignKey: 'id_juego' });
+    Tienda.belongsToMany(Juego, { through: Juego_Tiendas, foreignKey: 'id_tienda' });
+
+    const modelos = [Juego, Tienda, Juego_Tiendas];
+
+    for (const modelo of modelos) {
+        try {
+            await modelo.sync({ force: false });
+            console.log(`[ ${nombreApp} ] Tabla ${modelo.name} Sincronizada.`);
+        } catch (error) {
+            console.log(`[ ${nombreApp} ] Tabla ${modelo.name} No se ha Sincronizado: `.red, error);
+            throw error;
+        }
+    }
+
+    console.log(`[ ${nombreApp} ] Tablas Sincronizadas.`.green);
+
+    // Aplicación ejecutada en el puerto extraido desde .env o el por defecto.
+    app.listen(puertoApp, () => {
+        console.log(`[ ${nombreApp} ] Página Web en el Puerto ${puertoApp}.`.green);
+    });
+}
+
+iniciarCAJA();

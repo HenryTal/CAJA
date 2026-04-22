@@ -7,6 +7,7 @@ const { engine } = require("express-handlebars");
 
 // Definición del archivo con las rutas.
 const router = require("../routes/routes");
+const apiJuegosRouter = require("../routes/api/juegos");
 
 // Definición de la extención de los archivos para render.
 app.engine(".hbs", engine({
@@ -20,5 +21,6 @@ app.set("views", "./views")
 app.use("/", express.static("./public"));
 // Aplicación usara el router anterior para las rutas '/';
 app.use('/', router);
+app.use('/api/juegos/', apiJuegosRouter);
 
 module.exports = app;

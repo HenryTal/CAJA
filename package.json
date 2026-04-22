@@ -11,10 +11,13 @@
   "author": "Henry Talavera",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.15.2",
     "colors": "^1.4.0",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "express-handlebars": "^8.0.3",
-    "nodemon": "^3.1.11"
+    "mysql2": "^3.22.2",
+    "nodemon": "^3.1.11",
+    "sequelize": "^6.37.8"
   }
 }

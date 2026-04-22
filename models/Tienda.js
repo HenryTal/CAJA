@@ -13,19 +13,19 @@ const Tienda = sequelize.define("Tienda", {
     },
     banner: {
         type: DataTypes.TEXT,
-        allowNull: false
+        allowNull: true
     },
     banner: {
         type: DataTypes.TEXT,
-        allowNull: false
+        allowNull: true
     },
     logo: {
         type: DataTypes.TEXT,
-        allowNull: false
+        allowNull: true
     },
     icon: {
         type: DataTypes.TEXT,
-        allowNull: false
+        allowNull: true
     }
 }, {
     tableName: "tiendas",

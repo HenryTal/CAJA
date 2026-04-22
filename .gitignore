@@ -138,3 +138,6 @@ dist
 
 # Decorative Scripts for comments in code
 public/js/generateComment.js
+
+# Data Base API Test
+.test.json

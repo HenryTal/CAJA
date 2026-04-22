@@ -24,7 +24,7 @@ const Juego = sequelize.define("Juego", {
         allowNull: false
     },
     descripcion: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false
     },
     id_cheapshark: {

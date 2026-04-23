@@ -357,7 +357,7 @@ body[theme="light"] {
 .price {
     display: flex;
     gap: 5px;
-    align-items: center;
+    padding-top: 10px;
 }
 
 .price .offer {
@@ -408,6 +408,11 @@ body[theme="light"] {
 }
 
 .title {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     color: var(--title-color);
 }
 

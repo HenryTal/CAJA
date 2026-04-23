@@ -6,7 +6,7 @@ async function getTendencias(req, res) {
     try {
         let listaJuegos = await Juego.findAll({ 
             where: { es_tendencia: true },
-            limit: 10,
+            limit: 20,
             include: [{
                 model: Tienda,
                 through: { attributes: ['precio_actual', 'web'] }
@@ -14,7 +14,8 @@ async function getTendencias(req, res) {
         });
 
         if (listaJuegos.length == 0) {
-            const juegosParaInsertar = await obtenerTest();
+            let juegosParaInsertar = await getTest();
+            juegosParaInsertar = await getIGDBData(juegosParaInsertar);
             
             // Usamos bulkCreate para insertar todos de golpe
             // ignoreDuplicates: true evita errores si el slug ya existe
@@ -33,22 +34,21 @@ async function getTendencias(req, res) {
     }
 }
 
-async function obtenerTest() {
-    const API_KEY = process.env.RAWG_KEY; // Tu API Key de RAWG
-    // const url = `https://api.rawg.io/api/games?key=${API_KEY}&page_size=12&ordering=-added`;
+async function getTest() {
+    const RAWG_TOKEN = process.env.RAWG_TOKEN; // Tu API Key de RAWG
+    // const url = `https://api.rawg.io/api/games?key=${RAWG_TOKEN}&page_size=12&ordering=-added`;
     const url = `http://127.0.0.1:3010/api/juegos/test`;
 
     try {
         const response = await axios.get(url);
         const resultados = response.data.results;
 
-        // Mapeamos los datos de la API a tus columnas de Sequelize
         return resultados.map(game => ({
             titulo: game.name,
             slug: game.slug,
-            // Guardamos la imagen de RAWG
             imagen_url: game.background_image,
             descripcion: "",
+            id_rawg: game.id,
             fecha_lanzamiento: game.released,
             es_tendencia: true
         }));
@@ -56,6 +56,62 @@ async function obtenerTest() {
         console.error('Error en el fetch de RAWG:', error);
         return [];
     }
+}
+
+async function getIGDBData(games) {
+    const IGDB_CLIENT_ID = process.env.IGDB_CLIENT_ID
+    const IGDB_TOKEN = process.env.IGDB_TOKEN
+
+    const url = "https://api.igdb.com/v4/games";
+
+    let searchParams = "";
+
+    for (let game of games) {
+        if (searchParams != "") searchParams += " | ";
+        searchParams += (game.titulo == "") ? `slug = "${game.slug}"` : `name = "${game.titulo}"`;
+    }
+
+    const query = `
+        fields id,
+               name,
+               slug,
+               summary,
+               cover.url;
+        where ${searchParams};
+        limit 20;
+    `;
+
+    let gamesData = [];
+
+    try {
+        gamesData = await axios({
+            url: url,
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Client-ID': IGDB_CLIENT_ID,
+                'Authorization': `Bearer ${IGDB_TOKEN}`,
+                'Content-Type': 'text/plain'
+            },
+            data: query
+        });
+
+        gamesData = gamesData.data;
+    } catch (error) {
+        console.error('Error en IGDB:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+    
+    for (let game of games) {
+        const gameDataIGDB = gamesData[gamesData.findIndex(data => (data.slug == game.slug || data.name == game.titulo))];
+        
+        if (gameDataIGDB == undefined) continue;
+    
+        game.poster = gameDataIGDB.cover.url.replace("t_thumb", "t_cover_big");
+        game.descripcion = gameDataIGDB.summary;    
+    }
+
+    return games;
 }
 
 module.exports = { getTendencias };

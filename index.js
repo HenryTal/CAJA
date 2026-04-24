@@ -15,8 +15,10 @@ const db = require("./src/db");
 
 const Juego = require("./models/Juego");
 const Tienda = require("./models/Tienda");
+const Usuario = require("./models/Usuario");
 
 const Juego_Tiendas = require("./models/Juego_Tiendas");
+const Usuario_Juegos = require("./models/Usuario_Juegos");
 
 async function iniciarCAJA() {
     await db.conectar();
@@ -26,7 +28,10 @@ async function iniciarCAJA() {
     Juego.belongsToMany(Tienda, { through: Juego_Tiendas, foreignKey: 'id_juego' });
     Tienda.belongsToMany(Juego, { through: Juego_Tiendas, foreignKey: 'id_tienda' });
 
-    const modelos = [Juego, Tienda, Juego_Tiendas];
+    Usuario.belongsToMany(Juego, { through: Usuario_Juegos, foreignKey: 'id_usuario' });
+    Juego.belongsToMany(Usuario, { through: Usuario_Juegos, foreignKey: 'id_juego' });
+
+    const modelos = [Juego, Tienda, Usuario, Juego_Tiendas, Usuario_Juegos];
 
     for (const modelo of modelos) {
         try {

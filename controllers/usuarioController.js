@@ -44,6 +44,8 @@ async function removeToWishList(req, res) {
 
 async function getWishList(req, res) {
     try {
+        if (!req.usuario) return res.status(200).json([]);
+
         const id_usuario = req.usuario.id;
 
         const wishList = await Usuario_Juegos.findAll({

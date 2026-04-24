@@ -246,14 +246,13 @@ body[theme="light"] {
     transition: .2s ease opacity, .4s ease filter;
 }
 
-.image.img-loading {
-    opacity: 0.4;
-    filter: blur(10px);
-}
-
 .image.img-loaded {
     opacity: 1;
     filter: blur(0);
+}
+.image.img-loading {
+    opacity: 0.4;
+    filter: blur(10px);
 }
 .image.img-error {
     opacity: 0;
@@ -611,4 +610,25 @@ form {
 
 input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px var(--form-bg-color) inset !important;
+}
+
+.item-content .loading {
+    border-radius: 3px;
+    background-color: var(--image-loading-bg-color);
+    margin: 5px 0;
+}
+
+.title.loading {
+    width: 100%;
+    height: 20px;
+}
+
+.subtitle.loading {
+    width: 60%;
+    height: 15px;
+}
+
+.price.loading {
+    width: 80%;
+    height: 12px;
 }

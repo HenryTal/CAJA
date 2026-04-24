@@ -15,4 +15,10 @@ router.get('/test', (req, res) => {
     })
 });
 
+router.get('/auth/login', (req, res) => {
+    res.render("login", {
+        title: "Iniciar Sesión"
+    })
+});
+
 module.exports = router;

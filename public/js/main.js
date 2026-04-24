@@ -120,7 +120,7 @@ function toggleMenuUser() {
     menuElements.push(createElementMenu("settings", "link", "ri-settings-5-line", "Configuración", "/settings"));
     menuElements.push(createElementMenu("settings", "split"));
 
-    const isRegistered = true;
+    const isRegistered = localStorage.getItem('token_sesion');
 
     if (isRegistered) {
         menuElements.unshift(
@@ -139,7 +139,7 @@ function toggleMenuUser() {
 
     menuElements.forEach((element) => {
         menuUser.append(element);
-    })
+    });
 }
 
 /**
@@ -263,7 +263,7 @@ function imagesLoading() {
  */
 function showImage(img) {
     img.classList.add('img-loaded');
-    img.classList.remove('img-loading');
+    setTimeout(() => {img.classList.remove('img-loading');}, 100);
 }
 
 /**
@@ -397,6 +397,10 @@ function changePage(url, addToHistory) {
             // Lleva a la página test.
             testNavigation(addToHistory);
             break;
+        
+        case "/auth/logout":
+            logOut();
+            break;
 
         default:
             changeContent(url, "main", "main", addToHistory);
@@ -513,6 +517,11 @@ function moveWrapperItems(wrapper, direction) {
     // Los elementos dentro de el wrapper.
     const wrapperItems = wrapper.querySelector(".wrapper-items");
 
+    if (wrapperItems.children.length == 0) {
+        wrapper.classList.add("start", "end");
+        return;
+    }
+
     // El ancho de un elemento en el wrapper.
     const widthItem = wrapperItems.children[0].clientWidth;
     
@@ -569,4 +578,8 @@ function moveWrapperItems(wrapper, direction) {
 
     // Desplaza los elementos.
     wrapperItems.style.left = `-${newPage}px`;
+}
+
+function logOut() {
+    localStorage.removeItem("token_sesion");
 }

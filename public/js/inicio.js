@@ -8,10 +8,6 @@ async function loadTrendingGames() {
     const wrapper = section.querySelector(".wrapper");
     const wrapperItemsContainer = wrapper.querySelector(".wrapper-items");
 
-
-    wrapperItemsContainer.innerHTML = "";
-
-
     const buttonTestLogin = document.getElementById("buttonLogin");
     buttonTestLogin.addEventListener("click", loginTest);
 
@@ -25,9 +21,9 @@ async function loadTrendingGames() {
             }
         });
 
-    const wishList = await wishListResponse.json();
+    let wishList = [];
 
-    console.log(wishList);
+    if (wishListResponse.ok) wishList = await wishListResponse.json();
 
     fetch(`/api/juegos/tendencias?v=${Date.now()}`)
         .then(response => {
@@ -35,11 +31,14 @@ async function loadTrendingGames() {
             else console.error(`Error al obtener los juegos en tendencias.`);
         })
         .then(games => {
+            wrapperItemsContainer.innerHTML = "";
+            
             for (let game of games) {
                 game.en_lista_de_deseos = wishList.findIndex(gameWish => gameWish.id_juego == game.id) != -1;
                 wrapperItemsContainer.append(createGameItem(game));
             }
 
+            moveWrapperItems(wrapper)
             imagesLoading();
         })
         .catch(error => console.error(error));
@@ -66,8 +65,6 @@ async function loginTest() {
             localStorage.setItem('token_sesion', data.token);
 
             loadTrendingGames();
-
-            console.log(localStorage.getItem('token_sesion'));
         } else console.error(data.message, data.contraseniaHash);
 
     } catch (error) { console.error(error) }

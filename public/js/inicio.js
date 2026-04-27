@@ -11,19 +11,7 @@ async function loadTrendingGames() {
     const buttonTestLogin = document.getElementById("buttonLogin");
     buttonTestLogin.addEventListener("click", loginTest);
 
-    const token = localStorage.getItem('token_sesion');
-
-    const wishListResponse = await fetch(`/api/usuarios/wishlist/get`, { 
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-    let wishList = [];
-
-    if (wishListResponse.ok) wishList = await wishListResponse.json();
+    const wishList = await getWishListUser();
 
     fetch(`/api/juegos/tendencias?v=${Date.now()}`)
         .then(response => {
@@ -123,7 +111,7 @@ function createGameItem(game) {
     gameButtonFavoriteIcon.classList.add(game.en_lista_de_deseos ? iconInFavorite : iconFavorite);
     gameButtonFavorite.addEventListener("click", () => {
         const inWishList = gameButtonFavoriteIcon.classList.contains(iconInFavorite);
-        toggleFavorite(game.id, inWishList);
+        toggleFavorite(game, inWishList);
         if (inWishList) gameButtonFavoriteIcon.className = iconFavorite;
         else gameButtonFavoriteIcon.className = iconInFavorite;
     });
@@ -138,9 +126,27 @@ function createGameItem(game) {
     return gameContainer;
 }
 
-async function toggleFavorite(id, inWishList) {
+async function getWishListUser() {
+    const token = localStorage.getItem('token_sesion');
+
+    let wishList = [];
+    
+    const wishListResponse = await fetch(`/api/usuarios/wishlist/get`, { 
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+    if (wishListResponse.ok) wishList = await wishListResponse.json();
+
+    return wishList;
+}
+
+async function toggleFavorite(game, inWishList) {
     try {
-        const token = localStorage.getItem('token_sesion');
+        const token = getToken();
 
         const action = inWishList ? "remove" : "add";
 
@@ -151,14 +157,58 @@ async function toggleFavorite(id, inWishList) {
                 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
-                id_juego: id
+                id_juego: game.id
             })
         });
 
         const data = await response.json();
 
         if (response.ok) {
-            console.log(`Se ha ${action == "add" ? "agregado" : "removido"} ${id} en tu lista de deseos.`);
-        } else console.error(data.message);
+            createNotification("wishlist", "success", game.titulo, `Se ha ${action == "add" ? "agregado" : "removido"} en tu lista de deseos.`, `/image/games/${game.slug}/cover.jpg`);
+            imagesLoading();
+        } else {
+            console.error(data.message);
+        }
     } catch (error) { console.error(error) }
+}
+
+function createNotification(type, state, title, description, img) {
+    const notificationWrapper = document.getElementById("notification-wrapper");
+
+    const notificationContainer = document.createElement("div");
+    notificationContainer.classList.add("notification", type, state);
+
+    if (img) {
+        const itemImage = document.createElement("div");
+        itemImage.classList.add("item-image");
+
+        const imgSource = document.createElement("img");
+        imgSource.classList.add("image", "img-loading");
+        imgSource.src = img;
+
+        itemImage.append(imgSource);
+        notificationContainer.append(itemImage);
+    }
+
+    const notificationContent = document.createElement("div");
+    notificationContent.classList.add("item-content");
+    
+    const notificationTitle = document.createElement("span");
+    notificationTitle.classList.add("subtitle");
+    notificationTitle.textContent = title;
+    
+    const notificationDescription = document.createElement("span");
+    notificationDescription.classList.add("description");
+    notificationDescription.textContent = description;
+
+    notificationContent.append(notificationTitle, notificationDescription);
+    notificationContainer.append(notificationContent);
+
+    notificationWrapper.append(notificationContainer);
+
+    setTimeout(() => { notificationContainer.remove(); }, 5000);
+}
+
+function getToken() {
+    return localStorage.getItem('token_sesion');
 }

@@ -32,4 +32,10 @@ router.post('/login', async (req, res) => {
     res.json({ token });
 });
 
+router.get('/login', (req, res) => {
+    res.render("login", {
+        title: "Iniciar Sesión"
+    })
+});
+
 module.exports = router;

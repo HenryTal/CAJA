@@ -1,5 +1,24 @@
 const axios = require("axios");
+const Usuario = require("../models/Usuario");
+const Juego = require("../models/Juego");
 const Usuario_Juegos = require("../models/Usuario_Juegos");
+
+const listUsuarios = [
+    {
+        nombre: "Admin",
+        apellidos: "Admin",
+        nombre_usuario: "Admin",
+        email: "admin@caja.es",
+        contrasenia: "$2b$10$epexeXqIHKPtNX9dUFxzS.k/mEP75ST4FrgrUrHmS/y9CgQhdU4AS"
+    },
+    {
+        nombre: "Lista",
+        apellidos: "de Deseos",
+        nombre_usuario: "wishList",
+        email: "wishlist@caja.es",
+        contrasenia: "$2b$10$X3QgI98J0ze2/ZV6CkrBUe1pVD37zwb10W9R9WqMhFbjgp1jrWDMi"
+    }
+];
 
 async function addToWishList(req, res) {
     try {
@@ -62,4 +81,30 @@ async function getWishList(req, res) {
     }
 }
 
-module.exports = { addToWishList, removeToWishList, getWishList };
+async function getUsuario(username) {
+    try {
+        let user = await Usuario.findOne({ 
+            where: { nombre_usuario: username },
+            attributes: [ "id", "nombre_usuario", "experiencia_total" ],
+            include: [
+                {
+                    model: Juego,
+                    through: { attributes: [ "en_lista_de_deseos", "lo_tiene" ] }
+                }
+            ]
+        });
+
+        return user;
+    } catch (error) {
+        return { 
+            mensaje: "Error al usuario en la base de datos.", 
+            error: error.message 
+        };
+    }
+}
+
+async function fillTable() {
+    await Usuario.bulkCreate(listUsuarios, { ignoreDuplicates: true });
+}
+
+module.exports = { addToWishList, removeToWishList, getWishList, getUsuario, fillTable };

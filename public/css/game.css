@@ -1,0 +1,10 @@
+.section.details .item {
+    display: flex;
+}
+
+.section.details .item-image.cover {
+    width: 350px;
+    aspect-ratio: 3 / 4;
+    border-radius: 8px;
+    overflow: hidden;
+}

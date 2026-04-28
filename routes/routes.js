@@ -15,9 +15,13 @@ router.get('/test', (req, res) => {
     })
 });
 
-router.get('/auth/login', (req, res) => {
-    res.render("login", {
-        title: "Iniciar Sesión"
+const usuarioController = require("../controllers/usuarioController");
+
+router.get('/usuario/:username', (req, res) => {
+    let username = req.params.username;
+
+    res.render("usuario", {
+        title: `Perfil de ${username}`
     })
 });
 

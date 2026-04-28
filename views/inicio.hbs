@@ -1,10 +1,26 @@
 <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/carousel.css">
 <div id="main">
     <div class="section">
         <div class="container">
-            <div class="carousel autoslide" data-interval="4000">
+            <div class="carousel autoslide" data-interval="10000">
                 <div class="carousel-items animate">
-                    <div class="carousel-item active">
+                    <div class="carousel-item loading active">
+                        <img src="" alt="" class="image img-loading">
+                        <div class="info">
+                            <div class="cover">
+                                <img src="" alt="" class="image img-loading" loading="lazy">
+                            </div>
+                            <h3 class="title"></h3>
+                            <h5 class="subtitle"></h5>
+                            <p class="description"></p>
+                            <span class="price"></span>
+                            <div class="buttons">
+                                <span class="button button-primary"></span>
+                            </div>
+                        </div>
+                    </div>
+                    {{!-- <div class="carousel-item active">
                         <img src="https://cdn1.epicgames.com/spt-assets/ca9ef1bcf2f54043baac351366aec677/black-myth-wukong-yrpgs.png" alt="" class="image img-loading">
                         <div class="info">
                             <div class="cover">
@@ -51,10 +67,8 @@
                                 <button class="button button-secondary favorite"><i class="ri-poker-hearts-line"></i></button>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
-                {{!-- <div class="carousel-button button-prev"><i class="ri-arrow-left-wide-line"></i></div>
-                <div class="carousel-button button-next"><i class="ri-arrow-right-wide-line"></i></div> --}}
             </div>
         </div>
     </div>
@@ -67,65 +81,59 @@
                     <div class="wrapper-button button-next"><i class="ri-arrow-right-wide-line"></i></div>
                 </div>
                 <div class="wrapper-items">
-                    <div class="wrapper-item">
+                    <div class="wrapper-item loading">
                         <div class="item-image cover"></div>
-                        <div class="item-content loading">
-                            <div class="subtitle loading"></div>
-                            <div class="title loading"></div>
-                            <div class="price loading"></div>
+                        <div class="item-content">
+                            <div class="subtitle"></div>
+                            <div class="title"></div>
+                            <div class="price"></div>
                         </div>
                     </div>
-                    <div class="wrapper-item">
+                    <div class="wrapper-item loading">
                         <div class="item-image cover"></div>
-                        <div class="item-content loading">
-                            <div class="subtitle loading"></div>
-                            <div class="title loading"></div>
-                            <div class="price loading"></div>
+                        <div class="item-content">
+                            <div class="subtitle"></div>
+                            <div class="title"></div>
+                            <div class="price"></div>
                         </div>
                     </div>
-                    <div class="wrapper-item">
+                    <div class="wrapper-item loading">
                         <div class="item-image cover"></div>
-                        <div class="item-content loading">
-                            <div class="subtitle loading"></div>
-                            <div class="title loading"></div>
-                            <div class="price loading"></div>
+                        <div class="item-content">
+                            <div class="subtitle"></div>
+                            <div class="title"></div>
+                            <div class="price"></div>
                         </div>
                     </div>
-                    <div class="wrapper-item">
+                    <div class="wrapper-item loading">
                         <div class="item-image cover"></div>
-                        <div class="item-content loading">
-                            <div class="subtitle loading"></div>
-                            <div class="title loading"></div>
-                            <div class="price loading"></div>
+                        <div class="item-content">
+                            <div class="subtitle"></div>
+                            <div class="title"></div>
+                            <div class="price"></div>
                         </div>
                     </div>
-                    <div class="wrapper-item">
+                    <div class="wrapper-item loading">
                         <div class="item-image cover"></div>
-                        <div class="item-content loading">
-                            <div class="subtitle loading"></div>
-                            <div class="title loading"></div>
-                            <div class="price loading"></div>
+                        <div class="item-content">
+                            <div class="subtitle"></div>
+                            <div class="title"></div>
+                            <div class="price"></div>
                         </div>
                     </div>
-                    <div class="wrapper-item">
+                    <div class="wrapper-item loading">
                         <div class="item-image cover"></div>
-                        <div class="item-content loading">
-                            <div class="subtitle loading"></div>
-                            <div class="title loading"></div>
-                            <div class="price loading"></div>
+                        <div class="item-content">
+                            <div class="subtitle"></div>
+                            <div class="title"></div>
+                            <div class="price"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="section">
-        <div class="container">
-            <h2 class="section-title">Iniciar Sesion Test</h2>
-            <input type="text" name="" id="login">
-            <button class="button button-primary" id="buttonLogin">Test</button>
-        </div>
-    </div>
 </div>
 <script src="/js/carousel.js"></script>
+<script src="/js/trendingGames.js"></script>
 <script src="/js/inicio.js"></script>

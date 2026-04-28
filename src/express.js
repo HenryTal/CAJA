@@ -8,6 +8,7 @@ const { engine } = require("express-handlebars");
 // Definición del archivo con las rutas.
 const router = require("../routes/routes");
 const imagesRouter = require("../routes/images");
+const juegosRouter = require("../routes/juegos");
 const apiUsuariosRouter = require("../routes/api/usuarios");
 const apiJuegosRouter = require("../routes/api/juegos");
 const authRouter = require("../routes/auth");
@@ -26,6 +27,7 @@ app.use("/", express.static("./public"));
 app.use('/', router);
 app.use('/auth/', authRouter);
 app.use('/image/', imagesRouter);
+app.use('/juego/', juegosRouter);
 app.use('/api/juegos/', apiJuegosRouter);
 app.use('/api/usuarios/', apiUsuariosRouter);
 

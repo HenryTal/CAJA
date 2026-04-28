@@ -7,6 +7,12 @@
     "start": "start http://127.0.0.1:3010/ && node .",
     "dev": "start http://127.0.0.1:3010/ && code . && nodemon ."
   },
+  "nodemonConfig": {
+    "ignore": [
+      "public/**/*.js"
+    ],
+    "delay": 2500
+  },
   "keywords": [],
   "author": "Henry Talavera",
   "license": "ISC",

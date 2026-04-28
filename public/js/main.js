@@ -17,9 +17,6 @@ function loadFunctions() {
     
     loadWrappers();
 
-    const buttonTestSPA = document.getElementById("testSPA");
-    if (buttonTestSPA) buttonTestSPA.addEventListener("click", () => testNavigation(true));
-
     const menuUser = document.getElementById("dataUser");
     menuUser.addEventListener("click", toggleMenuUser);
 }
@@ -124,7 +121,7 @@ function toggleMenuUser() {
 
     if (isRegistered) {
         menuElements.unshift(
-            createElementMenu("settings", "link", "ri-user-line", "Perfil", "/user"),
+            createElementMenu("settings", "link", "ri-user-line", "Perfil", `/usuario/wishList`),
             createElementMenu("settings", "link", "ri-book-shelf-line", "Biblioteca", "/library"),
             createElementMenu("settings", "link", "ri-heart-line", "Lista de Deseos", "/wishlist")
         );
@@ -318,6 +315,7 @@ async function navigateTo(url) {
         } else {
             // Si encontro un error lo envía por consola.
             console.error("No se ha podido conectar con el servidor: ", error);
+            createNotification("normal", "failed", "Problemas al Navegar", "No se ha podido conectar con el Servidor.");
         }
         
         // Rellena por completo la barra de carga de la página.
@@ -354,19 +352,30 @@ async function changeContent(url, containerID, searchContainerID, addToHistory) 
     
     let newScripts = Array.from(page.querySelectorAll("script"));
     let oldScripts = Array.from(document.querySelectorAll("script"));
+
+    oldScripts.forEach(script => script.remove());
     
-    scriptsToLoad = newScripts.filter(newScript => !oldScripts.some(oldScript => oldScript.src === newScript.src));
+    // scriptsToLoad = newScripts.filter(newScript => !oldScripts.some(oldScript => oldScript.src === newScript.src));
 
     stylesToLoad.forEach(style => {
         document.head.appendChild(style);
     });
-    scriptsToLoad.forEach(script => {
+    newScripts.forEach(script => {
         const newScript = document.createElement("script");
         newScript.src = script.src;
 
         newScript.onload = () => {
             if (typeof startCarousel === "function") {
                 startCarousel();
+            }
+            if (typeof loadFunctions === "function") {
+                loadFunctions();
+            }
+            if (typeof loadTrendingGames === "function") {
+                loadTrendingGames();
+            }
+            if (typeof loadLoginFunctions === "function") {
+                loadLoginFunctions();
             }
         }
 
@@ -387,26 +396,18 @@ async function changeContent(url, containerID, searchContainerID, addToHistory) 
 
 function changePage(url, addToHistory) {
     // Los casos de posibles páginas a las que quiere ir el usuario.
-    switch (url) {
-        case "/":
-            // Lleva a la página Inicio.
-            navigateToHome(addToHistory);
-            break;
-    
-        case "/test":
-            // Lleva a la página test.
-            testNavigation(addToHistory);
-            break;
-        
-        case "/auth/logout":
-            logOut();
-            break;
+    if (url == "/") navigateToHome(addToHistory); // Lleva a la página Inicio.
+    else if (url == "/test") testNavigation(addToHistory); // Lleva a la página test.
+    else if (url == "/auth/logout") logOut();
+    else if (url.startsWith("/juego/")) {
+        const slug = url.split("/")[2];
+        console.log("Mostrando Juego", slug);
 
-        default:
-            changeContent(url, "main", "main", addToHistory);
+        const mainGame = document.getElementById("main-game");
 
-            break;
+        if (mainGame.innerHTML == "") changeContent(url, "main-game", "main", true);
     }
+    else changeContent(url, "main", "main", addToHistory);
 }
 
 /**
@@ -582,4 +583,179 @@ function moveWrapperItems(wrapper, direction) {
 
 function logOut() {
     localStorage.removeItem("token_sesion");
+
+    createNotification("normal", "success", "Cerrar Sesión", "Esperamos verte pronto...");
+}
+
+
+
+///////////////////
+
+function createGameItem(game) {
+    const gameContainer = document.createElement("div");
+    gameContainer.classList.add("wrapper-item");
+    gameContainer.id = game.id;
+    
+    const gameLink = document.createElement("a");
+    gameLink.href = `/juego/${game.slug}`;
+
+    
+    const gameCoverContainer = document.createElement("div");
+    gameCoverContainer.classList.add("item-image", "cover");
+    
+    gameContainer.append(gameCoverContainer);
+    
+    const gameCoverIMG = document.createElement("img");
+    gameCoverIMG.classList.add("image", "img-loading");
+    gameCoverIMG.loading = "lazy";
+    gameCoverIMG.src = `/image/games/${game.slug}/cover.jpg`;
+    
+    gameCoverContainer.append(gameCoverIMG);
+    
+    const gameContentContainer = document.createElement("div");
+    gameContentContainer.classList.add("item-content");
+    
+    gameContainer.append(gameContentContainer);
+    
+    const gameType = document.createElement("span");
+    gameType.classList.add("type");
+    gameType.textContent = "Juego Base";
+    
+    const gameTitle = document.createElement("h3");
+    gameTitle.classList.add("title");
+    gameTitle.textContent = game.titulo;
+    
+    const gamePriceContainer = document.createElement("span");
+    gamePriceContainer.classList.add("price");
+    
+    const gamePriceOffer = document.createElement("span");
+    gamePriceOffer.classList.add("offer");
+    gamePriceOffer.textContent = 50;
+    
+    const gamePriceBase = document.createElement("span");
+    gamePriceBase.classList.add("base");
+    gamePriceBase.textContent = 9.99;
+    
+    gamePriceContainer.append(gamePriceOffer, gamePriceBase);
+    
+    const gameButtonFavorite = document.createElement("button");
+    gameButtonFavorite.classList.add("button", "button-secondary", "favorite");
+    const gameButtonFavoriteIcon = document.createElement("i");
+    gameButtonFavoriteIcon.classList.add(game.en_lista_de_deseos ? iconInFavorite : iconFavorite);
+    gameButtonFavorite.addEventListener("click", async () => {
+        const inWishList = gameButtonFavoriteIcon.classList.contains(iconInFavorite);
+        
+        const actionSuccessful = await toggleFavorite(game, inWishList);
+
+        if (!actionSuccessful) return;
+
+        if (!inWishList) gameButtonFavoriteIcon.className = iconInFavorite;
+        else gameButtonFavoriteIcon.className = iconFavorite;
+    });
+    
+    gameButtonFavorite.append(gameButtonFavoriteIcon);
+    
+    gameContainer.append(gameLink);
+    gameContentContainer.append(gameType, gameTitle, gamePriceContainer);
+
+    gameContainer.append(gameButtonFavorite);
+
+    return gameContainer;
+}
+
+async function getWishListUser() {
+    const token = localStorage.getItem('token_sesion');
+
+    let wishList = [];
+    
+    const wishListResponse = await fetch(`/api/usuarios/wishlist/get`, { 
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+    if (wishListResponse.ok) wishList = await wishListResponse.json();
+
+    return wishList;
+}
+
+async function toggleFavorite(game, inWishList) {
+    try {
+        const token = getToken();
+
+        const action = inWishList ? "remove" : "add";
+
+        const response = await fetch(`/api/usuarios/wishlist/${action}`, { 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                id_juego: game.id
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            createNotification("wishlist", "success", game.titulo, `Se ha ${action == "add" ? "agregado" : "removido"} en tu lista de deseos.`, `/image/games/${game.slug}/cover.jpg`);
+            imagesLoading();
+
+            return true;
+        } else {
+            console.error(data.message);
+            createNotification("normal", "failed", "Agregar Juego a Lista de Deseos", `No se ha podido ${action == "add" ? "agregar" : "remover"} en tu Lista de Deseos.`);
+
+            return false;
+        }
+    } catch (error) { 
+        console.error(error);
+        createNotification("normal", "failed", "Agregar Juego a Lista de Deseos", `No se ha podido agregar a tu Lista de Deseos.`);
+        
+        return false;
+    }
+}
+
+function createNotification(type, state, title, description, img) {
+    const notificationWrapper = document.getElementById("notification-wrapper");
+
+    const notificationContainer = document.createElement("div");
+    notificationContainer.classList.add("notification", type, state);
+
+    if (img) {
+        const itemImage = document.createElement("div");
+        itemImage.classList.add("item-image");
+
+        const imgSource = document.createElement("img");
+        imgSource.classList.add("image", "img-loading");
+        imgSource.src = img;
+
+        itemImage.append(imgSource);
+        notificationContainer.append(itemImage);
+    }
+
+    const notificationContent = document.createElement("div");
+    notificationContent.classList.add("item-content");
+    
+    const notificationTitle = document.createElement("span");
+    notificationTitle.classList.add("subtitle");
+    notificationTitle.textContent = title;
+    
+    const notificationDescription = document.createElement("span");
+    notificationDescription.classList.add("description");
+    notificationDescription.textContent = description;
+
+    notificationContent.append(notificationTitle, notificationDescription);
+    notificationContainer.append(notificationContent);
+
+    notificationWrapper.append(notificationContainer);
+
+    setTimeout(() => { notificationContainer.remove(); }, 5000);
+}
+
+function getToken() {
+    return localStorage.getItem('token_sesion');
 }

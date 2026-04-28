@@ -1,6 +1,28 @@
 const axios = require("axios");
+
 const Juego = require("../models/Juego");
 const Tienda = require("../models/Tienda");
+const Plataforma = require("../models/Plataforma");
+
+async function getPlataformas(req, res) {
+    try {
+        let gameID = req.body.id_juego;
+
+        let plataformas = await Juego_Plataformas.findAll({ 
+            include: [{
+                model: Plataforma,
+                through: { attributes: [] }
+            }]
+        });
+    
+        res.status(200).json(plataformas);
+    } catch (error) {
+        res.status(500).json({ 
+            mensaje: "Error al obtener las plataformas", 
+            error: error.message 
+        });
+    }
+}
 
 async function getTendencias(req, res) {
     try {
@@ -114,4 +136,29 @@ async function getIGDBData(games) {
     return games;
 }
 
-module.exports = { getTendencias };
+async function getJuego(slug) {
+    try {
+        let game = await Juego.findOne({ 
+            where: { slug: slug },
+            include: [
+                {
+                    model: Tienda,
+                    through: { attributes: [ "precio_actual", "precio_base", "web" ] }
+                },
+                {
+                    model: Plataforma,
+                    through: { attributes: [] }
+                }
+            ]
+        });
+
+        return game;
+    } catch (error) {
+        return { 
+            mensaje: "Error al obtener los juegos en tendencias", 
+            error: error.message 
+        };
+    }
+}
+
+module.exports = { getTendencias, getJuego };

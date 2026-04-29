@@ -103,8 +103,32 @@ async function getUsuario(username) {
     }
 }
 
+async function getInfoUser(req, res) {
+    try {
+        const id_usuario = req.usuario.id;
+
+        const wishList = await Usuario.findOne({
+            where: {
+                id: id_usuario
+            },
+            attributes: [ "id", "nombre", "apellidos", "nombre_usuario", "email" ],
+            include: [
+                {
+                    model: Juego,
+                    through: { attributes: [ "en_lista_de_deseos", "lo_tiene" ] }
+                }
+            ]
+        });
+
+        if (wishList) return res.status(200).json(wishList);
+        else return res.status(400).json({ success: false, message: "El usuario no tiene información en la base de datos."});
+    } catch (error) {
+        console.error("Error al buscar en base de datos:", error);
+    }
+}
+
 async function fillTable() {
     await Usuario.bulkCreate(listUsuarios, { ignoreDuplicates: true });
 }
 
-module.exports = { addToWishList, removeToWishList, getWishList, getUsuario, fillTable };
+module.exports = { addToWishList, removeToWishList, getWishList, getInfoUser, getUsuario, fillTable };

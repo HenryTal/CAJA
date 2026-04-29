@@ -10,7 +10,7 @@
     transform: translateY(-35%);
 }
 
-.item-content {
+.details .item-content {
     display: block;
     width: 50%;
     align-self: end;

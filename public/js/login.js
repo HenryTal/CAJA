@@ -1,8 +1,5 @@
-window.addEventListener("load", loadLoginFunctions);
-
-// Clases para los iconos de mostrar y ocultar contraseña.
-let iconShowPassword = "ri-eye-close-line";
-let iconHiddenPassword = "ri-eye-line";
+// window.addEventListener("load", loadLoginFunctions);
+loadLoginFunctions();
 
 function loadLoginFunctions() {
     const showHiddenPasswordButton = document.querySelector(".show-password");

@@ -29,6 +29,19 @@ function loadFunctions() {
 // ║                                                                      ║
 // ╚══════════════════════════════════════════════════════════════════════╝
 
+// Iconos que se usaran en algunas funciones del sitio.
+// Clases para los iconos de la lista de deseos.
+var iconFavorite = "ri-poker-hearts-line";
+var iconInFavorite = "ri-poker-hearts-fill";
+// Clases para los iconos de tema oscuro y claro.
+var iconThemeDark = "ri-moon-fill";
+var iconThemeLight = "ri-sun-fill";
+// Clases para los iconos de mostrar y ocultar contraseña.
+var iconShowPassword = "ri-eye-close-line";
+var iconHiddenPassword = "ri-eye-line";
+
+
+
 // Agregar espera entre líneas de código.
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -107,7 +120,7 @@ function notifyUser(type, state, message) {
     if (state == "success") setTimeout(() => { container.classList.remove("show", "success") }, 5000);
 }
 
-function toggleMenuUser() {
+async function toggleMenuUser() {
     const menuUser = document.getElementById("dataUser").querySelector(".settings");
     menuUser.innerHTML = "";
     menuUser.classList.toggle("show");
@@ -117,11 +130,13 @@ function toggleMenuUser() {
     menuElements.push(createElementMenu("settings", "link", "ri-settings-5-line", "Configuración", "/settings"));
     menuElements.push(createElementMenu("settings", "split"));
 
-    const isRegistered = localStorage.getItem('token_sesion');
-
+    const isRegistered = getToken();
+    
     if (isRegistered) {
+        const infoUser = await getInfoUser();
+
         menuElements.unshift(
-            createElementMenu("settings", "link", "ri-user-line", "Perfil", `/usuario/wishList`),
+            createElementMenu("settings", "link", "ri-user-line", "Perfil", `/usuario/${infoUser.nombre_usuario}`),
             createElementMenu("settings", "link", "ri-book-shelf-line", "Biblioteca", "/library"),
             createElementMenu("settings", "link", "ri-heart-line", "Lista de Deseos", "/wishlist")
         );
@@ -179,10 +194,6 @@ function createElementMenu(menu, type, icon, legend, url) {
 // ║                        SWITCH THEME FUNCTIONS                        ║
 // ║                                                                      ║
 // ╚══════════════════════════════════════════════════════════════════════╝
-
-// Clases para los iconos de tema oscuro y claro.
-let iconThemeDark = "ri-moon-fill";
-let iconThemeLight = "ri-sun-fill";
 
 /**
  * Método que sincroniza el icono a mostrar en el botón que cambia entre
@@ -365,18 +376,21 @@ async function changeContent(url, containerID, searchContainerID, addToHistory) 
         newScript.src = script.src;
 
         newScript.onload = () => {
-            if (typeof startCarousel === "function") {
-                startCarousel();
-            }
-            if (typeof loadFunctions === "function") {
-                loadFunctions();
-            }
-            if (typeof loadTrendingGames === "function") {
-                loadTrendingGames();
-            }
-            if (typeof loadLoginFunctions === "function") {
-                loadLoginFunctions();
-            }
+            // if (typeof startCarousel === "function") {
+            //     startCarousel();
+            // }
+            // if (typeof loadFunctions === "function") {
+            //     loadFunctions();
+            // }
+            // if (typeof loadTrendingGames === "function") {
+            //     loadTrendingGames();
+            // }
+            // if (typeof loadLoginFunctions === "function") {
+            //     loadLoginFunctions();
+            // }
+            // if (typeof loadUserDetails === "function") {
+            //     // loadUserDetails();
+            // }
         }
 
         document.body.appendChild(newScript);
@@ -664,7 +678,7 @@ function createGameItem(game) {
 }
 
 async function getWishListUser() {
-    const token = localStorage.getItem('token_sesion');
+    const token = getToken();
 
     let wishList = [];
     
@@ -758,4 +772,89 @@ function createNotification(type, state, title, description, img) {
 
 function getToken() {
     return localStorage.getItem('token_sesion');
+}
+
+async function loadGamesInWrapper(sectionClass, gamesList, counter = false) {
+    const section = document.querySelector(sectionClass);
+
+    if (!section) return;
+
+    if (counter) {
+        const sectionTitle = section.querySelector(".section-title");
+        if (sectionTitle.textContent.split("(").length == 1) sectionTitle.textContent += ` (${gamesList.length})`;
+    }
+
+    const wrapper = section.querySelector(".wrapper");
+    const wrapperItemsContainer = wrapper.querySelector(".wrapper-items");
+
+    const wishListViewer = await getWishListUser();
+
+    wrapperItemsContainer.innerHTML = "";
+
+    if (gamesList.length == 0) {
+        wrapperItemsContainer.append(gamesNotFound());
+    } else {
+
+        for (let game of gamesList) {
+            game.en_lista_de_deseos = wishListViewer.findIndex(gameWish => gameWish.id_juego == game.id) != -1;
+            wrapperItemsContainer.append(createGameItem(game));
+        }
+    
+        moveWrapperItems(wrapper);
+    }
+            
+    imagesLoading();
+}
+
+function gamesNotFound() {
+    const itemContainer = document.createElement("div");
+    itemContainer.classList.add("item", "notFound");
+
+    const itemImage = document.createElement("div");
+    itemImage.classList.add("item-image", "transparent");
+
+    const itemImageSource = document.createElement("img");
+    itemImageSource.classList.add("image", "img-loading");
+    itemImageSource.src = "/img/not-found-full-art-v2.png";
+
+    itemImage.append(itemImageSource);
+
+    const itemContent = document.createElement("div");
+    itemContent.classList.add("item-content");
+
+    const itemText = document.createElement("h3");
+    itemText.classList.add("title");
+    itemText.textContent = "No se ha encontrado nada en esta caja...";
+
+    itemContent.append(itemText);
+
+    itemContainer.append(itemImage, itemContent);
+
+    return itemContainer;
+}
+
+async function getInfoUser() {
+    try {
+        const token = getToken();
+
+        const response = await fetch(`/api/usuarios/info`, { 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            return data;
+        } else {
+            console.error(data.message);
+            return [];
+        }
+    } catch (error) { 
+        console.error(error);
+        return [];
+    }
 }

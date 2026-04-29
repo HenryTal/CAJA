@@ -256,6 +256,7 @@ body[theme="light"] {
     display: flex;
     flex-direction: column;
     gap: 40px;
+    margin-bottom: 50px;
 }
 
 .section {
@@ -350,7 +351,7 @@ body[theme="light"] {
     flex-shrink: 0;
 }
 
-.item-image {
+.item-image:not(.transparent) {
     background-color: var(--image-loading-bg-color);
 }
 
@@ -608,4 +609,116 @@ input:-webkit-autofill {
     100% {
         transform: translateX(0%);
     }
+}
+
+
+
+.section.games .wrapper {
+    --items-shown: 6;
+    --wrapper-items-gap: 16px;
+}
+
+.section.games .wrapper-items {
+    position: relative;
+    flex-wrap: nowrap;
+    left: 0;
+    transition: .2s ease left;
+}
+
+.section.games .wrapper-item {
+    position: relative;
+    width: calc((100% - ((var(--items-shown) - 1) * var(--wrapper-items-gap))) / var(--items-shown));
+    padding: 5px;
+    transition: .2s ease background-color;
+}
+.wrapper-item a {
+    position: absolute;
+    display: block;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+}
+
+.section.games .wrapper-item .item-image.cover {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.section.games .wrapper-item .item-image.cover img {
+    transition: .3s ease scale;
+}
+.section.games .wrapper-item:hover {
+    background-color: var(--wrapper-item-hover-bg-color);
+}
+.section.games .wrapper-item:hover .item-image.cover img {
+    scale: 1.05;
+}
+
+.section.games .wrapper-buttons {
+    display: flex;
+    justify-content: end;
+    gap: 10px;
+    margin: 0 0 10px 0;
+}
+
+.section.games .wrapper-button {
+    width: 30px;
+    height: 30px;
+    background-color: var(--wrapper-button-bg-color);
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.section.games .wrapper.start .button-prev, .section.games .wrapper.end .button-next {
+    background-color: var(--wrapper-button-disabled-bg-color);
+    cursor: not-allowed;
+}
+
+.buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.favorite {
+    padding: 5px 10px;
+}
+
+.favorite i {
+    font-size: 20px;
+}
+
+.wrapper .favorite {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    opacity: 0;
+    transition: .2s ease opacity;
+}
+.wrapper-item:hover .favorite {
+    opacity: 1;
+}
+
+
+#login {
+    width: 500px;
+    height: 50px;
+}
+
+.notFound {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+}
+
+.notFound .item-image {
+    width: 250px;
+    align-self: center;
 }

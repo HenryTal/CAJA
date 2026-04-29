@@ -22,6 +22,7 @@ const Usuario = sequelize.define("Usuario", {
     },
     email: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false
     },
     contrasenia: {

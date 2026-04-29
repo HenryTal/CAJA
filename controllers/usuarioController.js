@@ -17,6 +17,20 @@ const listUsuarios = [
         nombre_usuario: "wishList",
         email: "wishlist@caja.es",
         contrasenia: "$2b$10$X3QgI98J0ze2/ZV6CkrBUe1pVD37zwb10W9R9WqMhFbjgp1jrWDMi"
+    },
+    {
+        nombre: "Usuario1",
+        apellidos: "Prueba",
+        nombre_usuario: "usuarioExtra1",
+        email: "correo1@caja.es",
+        contrasenia: "$2b$10$epexeXqIHKPtNX9dUFxzS.k/mEP75ST4FrgrUrHmS/y9CgQhdU4AS"
+    },
+    {
+        nombre: "Usuario2",
+        apellidos: "Prueba",
+        nombre_usuario: "usuarioExtra2",
+        email: "correo2@caja.es",
+        contrasenia: "$2b$10$X3QgI98J0ze2/ZV6CkrBUe1pVD37zwb10W9R9WqMhFbjgp1jrWDMi"
     }
 ];
 

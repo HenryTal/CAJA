@@ -12,6 +12,11 @@ const Tienda = sequelize.define("Tienda", {
         unique: true,
         allowNull: false
     },
+    id_cheapshark: {
+        type: DataTypes.INTEGER,
+        unique: true,
+        allowNull: true
+    },
     banner: {
         type: DataTypes.TEXT,
         allowNull: true

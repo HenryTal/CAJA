@@ -1,0 +1,25 @@
+.ca {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-color: currentColor;
+    mask-size: cover;
+    -webkit-mask-size: cover;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+}
+
+.ca-steam-fill {
+    mask-image: url('/icons/customs/svg/steam-logo-fill.svg');
+    -webkit-mask-image: url('/icons/customs/svg/steam-logo-fill.svg');
+}
+
+.ca-epic-games-fill {
+    mask-image: url('/icons/customs/svg/epic-games-logo-fill.svg');
+    -webkit-mask-image: url('/icons/customs/svg/epic-games-logo-fill.svg');
+}
+
+.ca-instant-gaming-fill {
+    mask-image: url('/icons/customs/svg/instant-gaming-logo-fill.svg');
+    -webkit-mask-image: url('/icons/customs/svg/instant-gaming-logo-fill.svg');
+}

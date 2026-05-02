@@ -1,13 +1,26 @@
 <link rel="stylesheet" href="/css/game.css">
 <div id="main">
-    <div class="section details">
+    <div class="section details loading">
         <div class="container">
             <div class="item">
-                <div class="item-image cover loading"></div>
+                <div class="item-image background"></div>
+                <div class="item-image cover"></div>
                 <div class="item-content">
-                    <div class="title loading"></div>
-                    <div class="platform loading"></div>
-                    <div class="price loading"></div>
+                    <h2 class="title"></h2>
+                    <div class="wrapper platforms">
+                        <div class="wrapper-items">
+                            <h4 class="wrapper-item"></h4>
+                            <h4 class="wrapper-item"></h4>
+                            <h4 class="wrapper-item"></h4>
+                        </div>
+                    </div>
+                    <p class="price"></p>
+                    <div class="wrapper buttons">
+                        <button href="" class="button button-secondary favorite"></button>
+                        <a href="" class="button button-primary buy"></a>
+                    </div>
+                    <a href="#othersShops" class="link subtitle others"></a>
+                    <p class="description"></p>
                 </div>
             </div>
         </div>
@@ -27,3 +40,4 @@
         </div>
     </div>
 </div>
+<script src="/js/game.js"></script>

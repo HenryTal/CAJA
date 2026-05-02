@@ -31,7 +31,7 @@ async function getTendencias(req, res) {
             limit: 20,
             include: [{
                 model: Tienda,
-                through: { attributes: ['precio_actual', 'web'] }
+                through: { attributes: ['precio_actual', 'precio_base', 'web'] }
             }]
         });
 

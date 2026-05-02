@@ -15,6 +15,7 @@ const db = require("./src/db");
 
 const Juego = require("./models/Juego");
 const Tienda = require("./models/Tienda");
+const tiendaController = require("./controllers/tiendaController");
 
 const Plataforma = require("./models/Plataforma");
 const plataformaController = require("./controllers/plataformaController");
@@ -60,6 +61,7 @@ async function iniciarCAJA() {
     }
 
     await plataformaController.fillTable();
+    await tiendaController.fillTable();
     await generoController.fillTable();
     await usuarioController.fillTable();
 

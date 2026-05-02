@@ -1,10 +1,100 @@
 .section.details .item {
     display: flex;
+    flex-wrap: wrap;
+}
+
+.item-image.background {
+    position: relative;
+    flex-shrink: 0;
+    width: 100%;
+    aspect-ratio: 16 / 4;
+    border-radius: 8px;
+}
+.item-image.background::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent 50%, var(--bg-color) 80%);
 }
 
 .section.details .item-image.cover {
-    width: 350px;
+    width: 25%;
     aspect-ratio: 3 / 4;
     border-radius: 8px;
     overflow: hidden;
+}
+
+.item-content {
+    position: relative;
+    width: 60%;
+    margin: 20px;
+}
+
+.item-content .platforms {
+    font-size: var(--subtitle-size);
+}
+.item-content .platforms .wrapper-item {
+    padding: 8px;
+    border-radius: 3px;
+    background-color: var(--badget-bg-color);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.item-content .platforms .wrapper-item i {
+    font-size: var(--title-size);
+}
+
+.item-content .price {
+    align-items: center;
+}
+
+.item-content .price .now, .item-content .buttons .button {
+    font-size: var(--title-size);
+    font-weight: var(--title-weight);
+}
+
+.item-content .buttons {
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.item-content .buttons .button.buy {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.item-content .buttons .favorite {
+    position: relative;
+    max-width: 45px;
+    top: 0;
+    right: 0;
+    opacity: 1;
+}
+
+.item-content .description {
+    margin: 30px 0;
+}
+
+.loading .title {
+    height: 30px;
+}
+
+.loading .subtitle {
+    display: block;
+    height: 20px;
+}
+
+.loading .price {
+    max-width: 150px;
+    height: 40px;
+    margin: 20px 0;
+}
+
+.loading .platforms .wrapper-item {
+    width: 100px;
+    height: 30px;
+    background-color: var(--image-loading-bg-color);
 }

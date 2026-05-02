@@ -39,6 +39,8 @@ var iconThemeLight = "ri-sun-fill";
 // Clases para los iconos de mostrar y ocultar contraseña.
 var iconShowPassword = "ri-eye-close-line";
 var iconHiddenPassword = "ri-eye-line";
+// Clase para el icono de sin stock.
+var iconWithoutStock = "ri-emotion-unhappy-line";
 
 
 
@@ -508,6 +510,50 @@ function applyDiscounts(wrapper) {
     })
 }
 
+function getDiscounts(priceNow, priceBase) {
+    const priceContainer = document.createElement("span");
+    const priceBaseContainer = document.createElement("span");
+    priceBaseContainer.classList.add("base");
+    priceBaseContainer.textContent = priceBase;
+    
+    if (priceNow != priceBase) {
+        const priceNowContainer = document.createElement("span");
+        priceNowContainer.classList.add("now");
+        priceNowContainer.textContent = priceNow;
+
+        const priceOfferContainer = document.createElement("span");
+        priceOfferContainer.classList.add("offer");
+        const priceDifference = Math.round(priceBase - priceNow);
+        priceOfferContainer.textContent = Math.round((priceDifference / priceBase) * 100);
+
+        priceContainer.append(priceOfferContainer, priceBaseContainer, priceNowContainer);
+    } else priceContainer.append(priceBaseContainer);
+
+    return priceContainer;
+}
+
+function getPrice(tiendas) {
+    if (tiendas.length == 0) {
+        const priceContainer = document.createElement("span");
+        const priceBase = document.createElement("span");
+        priceBase.classList.add("base");
+        priceBase.textContent = 0;
+        priceContainer.append(priceBase);
+
+        return priceContainer;
+    }
+    
+    const cheapShop = getCheapShop(tiendas);
+    
+    return getDiscounts(cheapShop.Juego_Tiendas.precio_actual, cheapShop.Juego_Tiendas.precio_base);
+}
+
+function getCheapShop(tiendas) {
+    tiendas.sort((a, b) => a.Juego_Tiendas.precio_actual - b.Juego_Tiendas.precio_actual);
+    
+    return tiendas[0];
+}
+
 /**
  * Mover los elementos de un wrapper.
  * @param {HTMLDivElement} wrapper - El wrapper al que se le moveran los elementos.
@@ -642,15 +688,7 @@ function createGameItem(game) {
     const gamePriceContainer = document.createElement("span");
     gamePriceContainer.classList.add("price");
     
-    const gamePriceOffer = document.createElement("span");
-    gamePriceOffer.classList.add("offer");
-    gamePriceOffer.textContent = 50;
-    
-    const gamePriceBase = document.createElement("span");
-    gamePriceBase.classList.add("base");
-    gamePriceBase.textContent = 9.99;
-    
-    gamePriceContainer.append(gamePriceOffer, gamePriceBase);
+    gamePriceContainer.innerHTML = getPrice(game.Tiendas).innerHTML;
     
     const gameButtonFavorite = document.createElement("button");
     gameButtonFavorite.classList.add("button", "button-secondary", "favorite");
@@ -845,12 +883,11 @@ async function getInfoUser() {
             }
         });
 
-        const data = await response.json();
-
+        
         if (response.ok) {
+            const data = await response.json();
             return data;
         } else {
-            console.error(data.message);
             return [];
         }
     } catch (error) { 

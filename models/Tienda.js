@@ -13,7 +13,7 @@ const Tienda = sequelize.define("Tienda", {
         allowNull: false
     },
     id_cheapshark: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         unique: true,
         allowNull: true
     },
@@ -30,6 +30,10 @@ const Tienda = sequelize.define("Tienda", {
         allowNull: true
     },
     icon: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    icon_alt: {
         type: DataTypes.TEXT,
         allowNull: true
     }

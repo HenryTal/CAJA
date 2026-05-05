@@ -50,7 +50,7 @@
     align-items: center;
 }
 
-.item-content .price .now, .item-content .buttons .button {
+.item-content .price .now, .item-content .buttons .button, .item-content .price:not(:has(.now)) .base {
     font-size: var(--title-size);
     font-weight: var(--title-weight);
 }
@@ -64,6 +64,10 @@
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+.item-content .buttons .button.buy .image {
+    width: 30px;
 }
 
 .item-content .buttons .favorite {

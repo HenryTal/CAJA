@@ -14,6 +14,7 @@ const app = require("./src/express");
 const db = require("./src/db");
 
 const Juego = require("./models/Juego");
+const Media = require("./models/Media");
 const Tienda = require("./models/Tienda");
 const tiendaController = require("./controllers/tiendaController");
 
@@ -34,7 +35,7 @@ const Usuario_Juegos = require("./models/Usuario_Juegos");
 async function iniciarCAJA() {
     await db.conectar();
 
-    console.log(`[ ${nombreApp} ] Sincronizando Tablas...`.blue);
+    console.log(`[ ${nombreApp} ] Sincronizando Tablas...`.cyan);
 
     Juego.belongsToMany(Tienda, { through: Juego_Tiendas, foreignKey: 'id_juego' });
     Tienda.belongsToMany(Juego, { through: Juego_Tiendas, foreignKey: 'id_tienda' });
@@ -48,7 +49,7 @@ async function iniciarCAJA() {
     Juego.belongsToMany(Usuario, { through: Usuario_Juegos, foreignKey: 'id_juego' });
     Usuario.belongsToMany(Juego, { through: Usuario_Juegos, foreignKey: 'id_usuario' });
     
-    const modelos = [Juego, Tienda, Usuario, Plataforma, Genero, Juego_Tiendas, Juego_Plataformas, Juego_Generos, Usuario_Juegos];
+    const modelos = [Juego, Media, Tienda, Usuario, Plataforma, Genero, Juego_Tiendas, Juego_Plataformas, Juego_Generos, Usuario_Juegos];
     
     for (const modelo of modelos) {
         try {

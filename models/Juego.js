@@ -35,6 +35,10 @@ const Juego = sequelize.define("Juego", {
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    id_igdb: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
     es_tendencia: {
         type: DataTypes.BOOLEAN,
         allowNull: false

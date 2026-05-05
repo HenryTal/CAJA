@@ -203,6 +203,7 @@ body[theme="light"] {
 
 .price {
     display: flex;
+    align-items: center;
     gap: 5px;
     padding-top: 10px;
 }
@@ -220,7 +221,7 @@ body[theme="light"] {
     margin-left: 3px;
 }
 
-.price .base {
+.price:has(.offer) .base {
     text-decoration: line-through;
 }
 .price .base::after, .price .now::after {

@@ -23,3 +23,8 @@
     mask-image: url('/icons/customs/svg/instant-gaming-logo-fill.svg');
     -webkit-mask-image: url('/icons/customs/svg/instant-gaming-logo-fill.svg');
 }
+
+.ca-gamebillet-fill {
+    mask-image: url('/icons/customs/svg/gamebillet-logo-fill.svg');
+    -webkit-mask-image: url('/icons/customs/svg/gamebillet-logo-fill.svg');
+}

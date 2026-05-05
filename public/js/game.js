@@ -60,7 +60,7 @@ async function loadGameDetails() {
 
             const buyButton = detailsContainer.querySelector(".button.buy");
             const otherShops = detailsContainer.querySelector(".others");
-            const shopIcon = document.createElement("i");
+            let shopIcon = document.createElement("i");
 
             if (!cheapShop) {
                 buyButton.href = "#";
@@ -68,7 +68,13 @@ async function loadGameDetails() {
                 buyButton.append(shopIcon, `No hay Stock de este Juego`);
             } else {
                 buyButton.href = cheapShop.Juego_Tiendas.web;
-                shopIcon.classList.add("ca", cheapShop.icon);
+                if (cheapShop.icon) shopIcon.classList.add("ca", cheapShop.icon);
+                else {
+                    shopIcon = document.createElement("img");
+                    shopIcon.classList.add("image", "img-loading");
+                    shopIcon.src = `/image/stores/${cheapShop.id}/icon.png`;
+                }
+
                 buyButton.append(shopIcon, `Comprar en ${cheapShop.nombre}`);
     
                 otherShops.textContent = `Ver precios en otras ${game.Tiendas.length} tiendas`;

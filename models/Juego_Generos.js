@@ -10,7 +10,7 @@ const Juego_Generos = sequelize.define("Juego_Generos", {
             key: "id"
         }
     },
-    id_plataforma: {
+    id_genero: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         references: {

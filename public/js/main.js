@@ -523,8 +523,7 @@ function getDiscounts(priceNow, priceBase) {
 
         const priceOfferContainer = document.createElement("span");
         priceOfferContainer.classList.add("offer");
-        const priceDifference = Math.round(priceBase - priceNow);
-        priceOfferContainer.textContent = Math.round((priceDifference / priceBase) * 100);
+        priceOfferContainer.textContent = Math.round((priceBase * priceNow) / 100);
 
         priceContainer.append(priceOfferContainer, priceBaseContainer, priceNowContainer);
     } else priceContainer.append(priceBaseContainer);
@@ -829,10 +828,9 @@ async function loadGamesInWrapper(sectionClass, gamesList, counter = false) {
 
     wrapperItemsContainer.innerHTML = "";
 
-    if (gamesList.length == 0) {
+    if (!gamesList || !gamesList[0]) {
         wrapperItemsContainer.append(gamesNotFound());
     } else {
-
         for (let game of gamesList) {
             game.en_lista_de_deseos = wishListViewer.findIndex(gameWish => gameWish.id_juego == game.id) != -1;
             wrapperItemsContainer.append(createGameItem(game));

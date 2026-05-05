@@ -43,9 +43,25 @@ router.get("/:slug", async (req, res) => {
     } catch (error) {
         console.error("Error Juego no Encontrado: ", error);
         res.status(500).json({
-            message: "Error Juego no Encontrado: ",
+            mensaje: "Error Juego no Encontrado: ",
             error: error
         });
+    }
+});
+
+router.get("/:id_game/medias", async (req, res) => {
+    const { id_game } = req.params;
+
+    try {
+        const medias = await juegoController.getGameMedias(id_game);
+
+        res.status(200).json(medias);
+    } catch (error) {
+        console.error("Error al buscar imagenes: ", error);
+        res.status(500).json({
+            mensaje: "Error imagenes no encontradas: ",
+            error: error
+        })
     }
 });
 

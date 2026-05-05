@@ -21,6 +21,12 @@ async function loadGameDetails() {
             coverSource.src = `/image/games/${game.slug}/cover.jpg`;
             coverContainer.append(coverSource);
 
+            const backgroundContainer = detailsContainer.querySelector(".background");
+            const backgroundSource = document.createElement("img");
+            backgroundSource.classList.add("image", "img-loading");
+            backgroundSource.src = `/image/games/${game.slug}/background.jpg`;
+            backgroundContainer.append(backgroundSource);
+
             const titleContainer = detailsContainer.querySelector(".title");
             titleContainer.textContent = game.titulo;
 

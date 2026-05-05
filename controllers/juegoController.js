@@ -174,29 +174,29 @@ async function getGamesArtworks(games) {
     const IGDB_CLIENT_ID = process.env.IGDB_CLIENT_ID;
     const IGDB_TOKEN = process.env.IGDB_TOKEN;
 
-    const url = "https://api.igdb.com/v4/artworks";
-
+    let url = "https://api.igdb.com/v4/artworks";
+    
     const searchGameIDs = games.filter(game => game.id_igdb).map(game => (game.id_igdb));
-
+    
     const artQuery = `
         fields 
-        alpha_channel,
-        animated,
-        artwork_type,
-        checksum,
-        game,
-        height,
-        image_id,
-        url,
-        width;
+            alpha_channel,
+            animated,
+            artwork_type,
+            checksum,
+            game,
+            height,
+            image_id,
+            url,
+            width;
         where game = (${searchGameIDs.join(', ')});
         limit 100;
     `;
-
+    
     let artworksData = [];
     
     try {
-        artworksData = await axios({
+        const response = await axios({
             url: url,
             method: "POST",
             headers: {
@@ -208,7 +208,42 @@ async function getGamesArtworks(games) {
             data: artQuery
         });
         
-        artworksData = artworksData.data;
+        artworksData = response.data;
+    } catch (error) {
+        console.error('Error en IGDB:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+
+    url = "https://api.igdb.com/v4/screenshots";
+
+    const screenshotsQuery = `
+        fields 
+            alpha_channel,
+            animated,
+            checksum,
+            game,
+            height,
+            image_id,
+            url,
+            width;
+        where game = (${searchGameIDs.join(', ')});
+        limit 150;
+    `;
+    
+    try {
+        const response = await axios({
+            url: url,
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Client-ID': IGDB_CLIENT_ID,
+                'Authorization': `Bearer ${IGDB_TOKEN}`,
+                'Content-Type': 'text/plain'
+            },
+            data: screenshotsQuery
+        });
+
+        artworksData.push(...response.data);
     } catch (error) {
         console.error('Error en IGDB:', error.response ? error.response.data : error.message);
         throw error;
@@ -216,7 +251,7 @@ async function getGamesArtworks(games) {
 
     let artWorksStorable = artworksData.map(art => ({
         id_igdb: art.id,
-        url: art.url.replace("t_thumb", "t_cover_big"),
+        url: art.url.replace("t_thumb", "t_1080p"),
         id_image: art.image_id,
         id_juego: art.game
     }));
@@ -263,7 +298,8 @@ async function checkShops(gameID) {
             
             if (response.data.length > 0) {
                 gameCheapSharkID = response.data[0].gameID;
-                await game.update({ id_cheapshark: gameCheapSharkID });
+                let gameCheapSharkBG = response.data[0].thumb;
+                await game.update({ id_cheapshark: gameCheapSharkID, thumb: gameCheapSharkBG });
             } else {
                 console.log(`[ CAJA ] Juego con titulo ${game.titulo} no encontrado en CheapShark.`.red);
                 return;
@@ -298,8 +334,18 @@ async function checkShops(gameID) {
     }
 }
 
-async function setCheapSharkID(gameTitle) {
+async function getGameMedias(gameID) {
+    try {
+        const game = await Juego.findByPk(gameID);
+        const medias = await Media.findAll({ where: { id_juego: game.id_igdb } });
 
+        return medias;
+    } catch (error) {
+        return {
+            mensaje: `Error al obtener imagenes de el juego con ID (${gameID}`,
+            error: error.message
+        }
+    }
 }
 
-module.exports = { getTendencias, getJuego };
+module.exports = { getTendencias, getJuego, getGameMedias };

@@ -83,11 +83,34 @@
 }
 
 .carousel-item .info .cover {
-    width: 280px;
+    max-width: 450px;
+    height: 150px;
+
     aspect-ratio: 16 / 9;
     background-color: var(--image-loading-bg-color);
     border-radius: 8px;
+    overflow: hidden;
 }
 .carousel-item .info .cover:has(.img-loaded) {
     background-color: transparent;
+}
+
+.carousel-item .buttons {
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.carousel-item .buttons .button.buy {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.carousel-item .buttons .button.buy .image {
+    width: 30px;
+}
+
+.carousel-item .price .now, .carousel-item .buttons .button, .carousel-item .price:not(:has(.now)) .base {
+    font-size: var(--title-size);
+    font-weight: var(--title-weight);
 }

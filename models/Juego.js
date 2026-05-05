@@ -19,6 +19,14 @@ const Juego = sequelize.define("Juego", {
         type: DataTypes.TEXT,
         allowNull: false
     },
+    thumb: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    background: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
     fecha_lanzamiento: {
         type: DataTypes.DATEONLY,
         allowNull: false

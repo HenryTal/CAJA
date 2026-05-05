@@ -34,6 +34,62 @@ router.get('/games/:slug/cover.jpg', async (req, res) => {
     }
 });
 
+router.get('/games/:slug/thumb.jpg', async (req, res) => {
+    try {
+        const { slug } = req.params;
+
+        const juego = await Juego.findOne({ where: { slug: slug } });
+
+        if (!juego || !juego.thumb) {
+            return res.status(404).send('Imagen no encontrada');
+        }
+
+        const urlOriginal = juego.thumb;
+        const thumbURL = urlOriginal.startsWith('http') ? urlOriginal : `https:${urlOriginal}`;
+
+        const response = await axios.get(thumbURL, {
+            responseType: 'arraybuffer'
+        });
+
+        res.set('Content-Type', response.headers['content-type']);
+        res.set('Cache-Control', 'public, max-age=86400');
+
+        res.send(response.data);
+
+    } catch (error) {
+        console.error('Error al redireccionar imagen:', error.message);
+        res.status(500).send('Error al cargar la imagen');
+    }
+});
+
+router.get('/games/:slug/background.jpg', async (req, res) => {
+    try {
+        const { slug } = req.params;
+
+        const juego = await Juego.findOne({ where: { slug: slug } });
+
+        if (!juego || !juego.background) {
+            return res.status(404).send('Imagen no encontrada');
+        }
+
+        const urlOriginal = juego.background;
+        const backgroundURL = urlOriginal.startsWith('http') ? urlOriginal : `https:${urlOriginal}`;
+
+        const response = await axios.get(backgroundURL, {
+            responseType: 'arraybuffer'
+        });
+
+        res.set('Content-Type', response.headers['content-type']);
+        res.set('Cache-Control', 'public, max-age=86400');
+
+        res.send(response.data);
+
+    } catch (error) {
+        console.error('Error al redireccionar imagen:', error.message);
+        res.status(500).send('Error al cargar la imagen');
+    }
+});
+
 router.get('/medias/:id_image.jpg', async (req, res) => {
     try {
         const { id_image } = req.params;

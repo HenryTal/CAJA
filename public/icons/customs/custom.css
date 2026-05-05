@@ -28,3 +28,8 @@
     mask-image: url('/icons/customs/svg/gamebillet-logo-fill.svg');
     -webkit-mask-image: url('/icons/customs/svg/gamebillet-logo-fill.svg');
 }
+
+.ca-gog-fill {
+    mask-image: url('/icons/customs/svg/gog-logo-fill.svg');
+    -webkit-mask-image: url('/icons/customs/svg/gog-logo-fill.svg');
+}

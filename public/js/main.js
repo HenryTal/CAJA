@@ -33,6 +33,9 @@ function loadFunctions() {
 // Clases para los iconos de la lista de deseos.
 var iconFavorite = "ri-poker-hearts-line";
 var iconInFavorite = "ri-poker-hearts-fill";
+// Clases para los iconos de la lista de deseos.
+var iconPurchased = "ri-add-circle-line";
+var iconInPurchased = "ri-add-circle-fill";
 // Clases para los iconos de tema oscuro y claro.
 var iconThemeDark = "ri-moon-fill";
 var iconThemeLight = "ri-sun-fill";
@@ -413,7 +416,7 @@ async function changeContent(url, containerID, searchContainerID, addToHistory) 
 function changePage(url, addToHistory) {
     // Los casos de posibles páginas a las que quiere ir el usuario.
     if (url == "/") navigateToHome(addToHistory); // Lleva a la página Inicio.
-    else if (url.split("#").length != 0) {
+    else if (url.split("#").length != 1) {
         console.log(url);
 
         let elementID = url.split("#");
@@ -553,7 +556,7 @@ function getDiscounts(priceNow, priceBase) {
 }
 
 function getPrice(tiendas) {
-    if (tiendas.length == 0) {
+    if (!tiendas) {
         const priceContainer = document.createElement("span");
         const priceBase = document.createElement("span");
         priceBase.classList.add("base");
@@ -721,6 +724,26 @@ function createGameItem(game) {
     
     const gamePriceContainer = getPrice(game.Tiendas);
     gamePriceContainer.classList.add("price");
+
+    const gameButtons = document.createElement("div");
+    gameButtons.classList.add("buttons");
+    
+    const gameButtonPurchased = document.createElement("button");
+    gameButtonPurchased.classList.add("button", "button-secondary", "purchased");
+    const gameButtonPurchasedIcon = document.createElement("i");
+    gameButtonPurchasedIcon.classList.add(game.en_lista_de_deseos ? iconInPurchased : iconPurchased);
+    gameButtonPurchased.addEventListener("click", async () => {
+        const inPurchasedList = gameButtonPurchasedIcon.classList.contains(iconInPurchased);
+        
+        const actionSuccessful = await togglePurchased(game, inPurchasedList);
+
+        if (!actionSuccessful) return;
+
+        if (!inPurchasedList) gameButtonPurchasedIcon.className = iconInPurchased;
+        else gameButtonPurchasedIcon.className = iconPurchased;
+    });
+    
+    gameButtonPurchased.append(gameButtonPurchasedIcon);
     
     const gameButtonFavorite = document.createElement("button");
     gameButtonFavorite.classList.add("button", "button-secondary", "favorite");
@@ -738,11 +761,13 @@ function createGameItem(game) {
     });
     
     gameButtonFavorite.append(gameButtonFavoriteIcon);
+
+    gameButtons.append(gameButtonFavorite, gameButtonPurchased);
     
     gameContainer.append(gameLink);
     gameContentContainer.append(gameType, gameTitle, gamePriceContainer);
 
-    gameContainer.append(gameButtonFavorite);
+    gameContainer.append(gameButtons);
 
     return gameContainer;
 }
@@ -765,6 +790,44 @@ async function getWishListUser() {
     return wishList;
 }
 
+async function togglePurchased(game, inPurchasedList) {
+    try {
+        const token = getToken();
+
+        const action = inPurchasedList ? "remove" : "add";
+
+        const response = await fetch(`/api/usuarios/purchased/${action}`, { 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                id_juego: game.id
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            createNotification("purchasedlist", "success", game.titulo, `Se ha ${action == "add" ? "agregado ha" : "removido de"} tu lista de juegos comprados.`, `/image/games/${game.slug}/cover.jpg`);
+            imagesLoading();
+
+            return true;
+        } else {
+            console.error(data.message);
+            createNotification("normal", "failed", "Agregar Juego a Lista de Juegos Comprados", `No se ha podido ${action == "add" ? "agregar" : "remover"} en tu Lista de Juegos Comprados.`);
+
+            return false;
+        }
+    } catch (error) { 
+        console.error(error);
+        createNotification("normal", "failed", "Agregar Juego a Lista de Juegos Comprados", `No se ha podido agregar a tu Lista de Juegos Comprados.`);
+        
+        return false;
+    }
+}
+
 async function toggleFavorite(game, inWishList) {
     try {
         const token = getToken();
@@ -785,7 +848,7 @@ async function toggleFavorite(game, inWishList) {
         const data = await response.json();
 
         if (response.ok) {
-            createNotification("wishlist", "success", game.titulo, `Se ha ${action == "add" ? "agregado" : "removido"} en tu lista de deseos.`, `/image/games/${game.slug}/cover.jpg`);
+            createNotification("wishlist", "success", game.titulo, `Se ha ${action == "add" ? "agregado ha" : "removido de"} tu lista de deseos.`, `/image/games/${game.slug}/cover.jpg`);
             imagesLoading();
 
             return true;

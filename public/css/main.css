@@ -614,11 +614,11 @@ input:-webkit-autofill {
     animation: notificationIntro normal .2s;
 }
 
-.notification.wishlist {
+.notification.wishlist, .notification.purchasedlist {
     display: flex;
 }
 
-.notification.wishlist .item-image {
+.notification.wishlist .item-image, .notification.purchasedlist .item-image {
     height: 100px;
 }
 
@@ -628,7 +628,7 @@ input:-webkit-autofill {
     justify-content: center;
     margin: 10px 20px;
 }
-.notification:not(.wishlist)::before {
+.notification:not(.wishlist, .purchasedlist)::before {
     content: "";
     position: absolute;
     display: block;
@@ -728,22 +728,23 @@ input:-webkit-autofill {
     gap: 5px;
 }
 
-.favorite {
+.favorite, .purchased {
     padding: 5px 10px;
 }
 
-.favorite i {
+.favorite i, .purchased i {
     font-size: 20px;
 }
 
-.wrapper .favorite {
+.wrapper .buttons {
     position: absolute;
+    flex-direction: column;
     top: 10px;
     right: 10px;
     opacity: 0;
     transition: .2s ease opacity;
 }
-.wrapper-item:hover .favorite {
+.wrapper-item:hover .buttons {
     opacity: 1;
 }
 

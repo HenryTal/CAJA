@@ -1,15 +1,15 @@
 // window.addEventListener("load", loadLoginFunctions);
-loadLoginFunctions();
+loadRegisterFunctions();
 
-function loadLoginFunctions() {
+function loadRegisterFunctions() {
     const showHiddenPasswordButton = document.querySelector(".show-password");
     showHiddenPasswordButton.addEventListener("click", showHiddenPassword);
 
-    const formLogin = document.getElementById("form-login");
-    formLogin.addEventListener("submit", (e) => {
+    const formRegister = document.getElementById("form-register");
+    formRegister.addEventListener("submit", (e) => {
         e.preventDefault();
 
-        loginTry();
+        registerTry();
     });
 }
 
@@ -29,17 +29,23 @@ function showHiddenPassword(e) {
     }
 }
 
-async function loginTry() {
+async function registerTry() {
     try {
+        const name = document.getElementById("name").value;
+        const lastname = document.getElementById("lastname").value;
+        const username = document.getElementById("username").value;
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
 
-        const response = await fetch('/auth/login', { 
+        const response = await fetch('/auth/register', { 
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                name: name,
+                lastname: lastname,
+                username: username,
                 email: email,
                 password: password
             })
@@ -48,14 +54,12 @@ async function loginTry() {
         const data = await response.json();
 
         if (response.ok) {
-            localStorage.setItem('token_sesion', data.token);
+            changePage("/auth/login", true);
 
-            changePage("/", true);
-
-            createNotification("normal", "success", "Inicio de Sesion Correcto", "Bienvenido/a a CAJA.");
+            createNotification("normal", "success", "Cuenta Registrada Correctamente", "Bienvenido/a a CAJA.");
         } else {
             console.error(data.message);
-            createNotification("normal", "failed", "Inicio de Sesion Fallido", data.message);
+            createNotification("normal", "failed", "Registro Fallido", data.message);
         }
 
     } catch (error) { console.error(error) }

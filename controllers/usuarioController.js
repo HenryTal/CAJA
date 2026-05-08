@@ -1,6 +1,7 @@
 const axios = require("axios");
 const Usuario = require("../models/Usuario");
 const Juego = require("../models/Juego");
+const Tienda = require("../models/Tienda");
 const Usuario_Juegos = require("../models/Usuario_Juegos");
 
 const listUsuarios = [
@@ -33,6 +34,67 @@ const listUsuarios = [
         contrasenia: "$2b$10$X3QgI98J0ze2/ZV6CkrBUe1pVD37zwb10W9R9WqMhFbjgp1jrWDMi"
     }
 ];
+
+async function addToPurchasedList(req, res) {
+    try {
+        const id_juego = req.body.id_juego;
+        const id_usuario = req.usuario.id;
+
+        if (!id_juego) return res.status(400).json({ error: "Falta el ID del Juego." });
+
+        await Usuario_Juegos.upsert({
+            id_usuario: id_usuario,
+            id_juego: id_juego,
+            lo_tiene: true
+        })
+
+        return res.status(200).json({ success: true, message: "Juego agregado a la lista de juegos comprados" });
+    } catch (error) {
+        console.error("Error al guardar en deseos:", error);
+    }
+}
+
+async function removeToPurchasedList(req, res) {
+    try {
+        const id_juego = req.body.id_juego;
+        const id_usuario = req.usuario.id;
+
+        if (!id_juego) return res.status(400).json({ error: "Falta el ID del Juego." });
+
+        const affectedRows = await Usuario_Juegos.destroy({
+            where: {
+                id_usuario: id_usuario,
+                id_juego: id_juego,
+                lo_tiene: true
+            }
+        });
+
+        if (affectedRows == 0) return res.status(400).json({ success: false, message: "Juego no encontrado en la lista de juegos comprados."});
+        else return res.status(200).json({ success: true, message:  "Juego eliminado de la lista de juegos comprados."});
+    } catch (error) {
+        console.error("Error al elimnar en juegos comprados:", error);
+    }
+}
+
+async function getPurchasedList(req, res) {
+    try {
+        if (!req.usuario) return res.status(200).json([]);
+
+        const id_usuario = req.usuario.id;
+
+        const purchasedList = await Usuario_Juegos.findAll({
+            where: {
+                id_usuario: id_usuario,
+                lo_tiene: true
+            }
+        });
+
+        if (purchasedList) return res.status(200).json(purchasedList);
+        else return res.status(400).json({ success: false, message: "La lista de juegos comprados esta vacia o usuario no existe."});
+    } catch (error) {
+        console.error("Error al buscar en juegos comprados:", error);
+    }
+}
 
 async function addToWishList(req, res) {
     try {
@@ -103,7 +165,13 @@ async function getUsuario(username) {
             include: [
                 {
                     model: Juego,
-                    through: { attributes: [ "en_lista_de_deseos", "lo_tiene" ] }
+                    through: { attributes: [ "en_lista_de_deseos", "lo_tiene" ] },
+                    include: [
+                        {
+                            model: Tienda,
+                            through: { attributes: [ "precio_actual", "precio_base", "web" ] }
+                        }
+                    ]
                 }
             ]
         });
@@ -111,7 +179,7 @@ async function getUsuario(username) {
         return user;
     } catch (error) {
         return { 
-            mensaje: "Error al usuario en la base de datos.", 
+            mensaje: "Error al encontrar usuario en la base de datos.", 
             error: error.message 
         };
     }
@@ -145,4 +213,4 @@ async function fillTable() {
     await Usuario.bulkCreate(listUsuarios, { ignoreDuplicates: true });
 }
 
-module.exports = { addToWishList, removeToWishList, getWishList, getInfoUser, getUsuario, fillTable };
+module.exports = { addToWishList, removeToWishList, getWishList, addToPurchasedList, removeToPurchasedList, getPurchasedList, getInfoUser, getUsuario, fillTable };

@@ -2,14 +2,19 @@ const express = require("express");
 const router = express.Router();
 
 const { validateToken } = require("../../middleware/auth");
-const { addToWishList, removeToWishList, getWishList, getInfoUser, getUsuario } = require("../../controllers/usuarioController");
+const { addToWishList, removeToWishList, getWishList, addToPurchasedList, removeToPurchasedList, getPurchasedList, getInfoUser, getUsuario } = require("../../controllers/usuarioController");
 
 router.use(express.json());
 
 router.post('/info', validateToken, getInfoUser);
+
 router.post('/wishlist/get', validateToken, getWishList);
 router.post('/wishlist/add', validateToken, addToWishList);
 router.post('/wishlist/remove', validateToken, removeToWishList);
+
+router.post('/purchased/get', validateToken, getPurchasedList);
+router.post('/purchased/add', validateToken, addToPurchasedList);
+router.post('/purchased/remove', validateToken, removeToPurchasedList);
 
 router.get('/:username', async (req, res) => {
     let username = req.params.username;

@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+const { Op } = require('sequelize');
+
 const Usuario = require("../models/Usuario");
 
 const jwt = require('jsonwebtoken');
@@ -9,16 +11,13 @@ const bcrypt = require("bcryptjs");
 router.use(express.json());
 
 router.post('/login', async (req, res) => {
-    const { email, contrasenia } = req.body;
+    const { email, password } = req.body;
 
-    const usuario = await Usuario.findOne({ where: { email } });
+    const usuario = await Usuario.findOne({ where: { email: email } });
 
-    const salt = await bcrypt.genSalt(10);
-    const hashParaLaDB = await bcrypt.hash(contrasenia, salt);
+    if (!usuario) return res.status(401).json({ message: "Credenciales Incorrectas" });
 
-    if (!usuario) return res.status(401).json({ message: "Credenciales Incorrectas", contraseniaHash: hashParaLaDB });
-
-    const esValida = await bcrypt.compare(contrasenia, usuario.contrasenia);
+    const esValida = await bcrypt.compare(password, usuario.contrasenia);
 
 
     if (!esValida || !usuario) return res.status(401).json({ message: "Credenciales Incorrectas" });
@@ -35,6 +34,36 @@ router.post('/login', async (req, res) => {
 router.get('/login', (req, res) => {
     res.render("login", {
         title: "Iniciar Sesión"
+    })
+});
+
+
+router.post('/register', async (req, res) => {
+    const { name, lastname, username, email, password } = req.body;
+
+    const usuarioEmail = await Usuario.findOne({ where: { email: email } });
+    const usuarioUsername = await Usuario.findOne({ where: { nombre_usuario: username } })
+
+    if (usuarioEmail) return res.status(409).json({ message: "Ya existe una Cuenta con ese Correo Electronico" });
+    if (usuarioUsername) return res.status(409).json({ message: "Ese nombre de usuario ya esta en uso" });
+
+    const salt = await bcrypt.genSalt(10);
+    const passwordHashed = await bcrypt.hash(password, salt);
+
+    Usuario.create({
+        nombre: name,
+        apellidos: lastname,
+        nombre_usuario: username,
+        email: email,
+        contrasenia: passwordHashed
+    });
+
+    res.status(200).json({ message: "Cuentra registrada correctamente" });
+});
+
+router.get('/register', (req, res) => {
+    res.render("register", {
+        title: "Registrarse en CAJA"
     })
 });
 

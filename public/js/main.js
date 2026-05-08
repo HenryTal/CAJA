@@ -731,7 +731,7 @@ function createGameItem(game) {
     const gameButtonPurchased = document.createElement("button");
     gameButtonPurchased.classList.add("button", "button-secondary", "purchased");
     const gameButtonPurchasedIcon = document.createElement("i");
-    gameButtonPurchasedIcon.classList.add(game.en_lista_de_deseos ? iconInPurchased : iconPurchased);
+    gameButtonPurchasedIcon.classList.add(game.lo_tiene ? iconInPurchased : iconPurchased);
     gameButtonPurchased.addEventListener("click", async () => {
         const inPurchasedList = gameButtonPurchasedIcon.classList.contains(iconInPurchased);
         
@@ -788,6 +788,24 @@ async function getWishListUser() {
     if (wishListResponse.ok) wishList = await wishListResponse.json();
 
     return wishList;
+}
+
+async function getPurchasedListUser() {
+    const token = getToken();
+
+    let purchasedList = [];
+    
+    const purchasedListResponse = await fetch(`/api/usuarios/purchased/get`, { 
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+    if (purchasedListResponse.ok) purchasedList = await purchasedListResponse.json();
+
+    return purchasedList;
 }
 
 async function togglePurchased(game, inPurchasedList) {
@@ -921,6 +939,7 @@ async function loadGamesInWrapper(sectionClass, gamesList, counter = false) {
     const wrapperItemsContainer = wrapper.querySelector(".wrapper-items");
 
     const wishListViewer = await getWishListUser();
+    const purchasedListViewer = await getPurchasedListUser();
 
     wrapperItemsContainer.innerHTML = "";
 
@@ -929,6 +948,7 @@ async function loadGamesInWrapper(sectionClass, gamesList, counter = false) {
     } else {
         for (let game of gamesList) {
             game.en_lista_de_deseos = wishListViewer.findIndex(gameWish => gameWish.id_juego == game.id) != -1;
+            game.lo_tiene = purchasedListViewer.findIndex(gamePurchased => gamePurchased.id_juego == game.id) != -1;
             wrapperItemsContainer.append(createGameItem(game));
         }
     

@@ -61,13 +61,13 @@ async function removeToPurchasedList(req, res) {
 
         if (!id_juego) return res.status(400).json({ error: "Falta el ID del Juego." });
 
-        const affectedRows = await Usuario_Juegos.destroy({
-            where: {
+        const affectedRows = await Usuario_Juegos.update(
+            { lo_tiene: false },
+            {where: {
                 id_usuario: id_usuario,
-                id_juego: id_juego,
-                lo_tiene: true
-            }
-        });
+                id_juego: id_juego
+            }}
+        );
 
         if (affectedRows == 0) return res.status(400).json({ success: false, message: "Juego no encontrado en la lista de juegos comprados."});
         else return res.status(200).json({ success: true, message:  "Juego eliminado de la lista de juegos comprados."});
@@ -122,13 +122,13 @@ async function removeToWishList(req, res) {
 
         if (!id_juego) return res.status(400).json({ error: "Falta el ID del Juego." });
 
-        const affectedRows = await Usuario_Juegos.destroy({
-            where: {
+        const affectedRows = await Usuario_Juegos.update(
+            { en_lista_de_deseos: false },
+            { where: {
                 id_usuario: id_usuario,
-                id_juego: id_juego,
-                en_lista_de_deseos: true
-            }
-        });
+                id_juego: id_juego
+            } }
+        );
 
         if (affectedRows == 0) return res.status(400).json({ success: false, message: "Juego no encontrado en la lista de deseos."});
         else return res.status(200).json({ success: true, message:  "Juego eliminado de la lista de deseos."});

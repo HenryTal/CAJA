@@ -55,15 +55,32 @@ async function fillCarousel(carousel, games) {
             const inWishList = buttonFavoriteIcon.classList.contains(iconInFavorite);
             
             const actionSuccessful = await toggleFavorite(game, inWishList);
-
+            
             if (!actionSuccessful) return;
-
+            
             if (!inWishList) buttonFavoriteIcon.className = iconInFavorite;
             else buttonFavoriteIcon.className = iconFavorite;
         });
-
+        
         buttonFavorite.append(buttonFavoriteIcon);
-
+        
+        const buttonPurchased = document.createElement("button");
+        buttonPurchased.classList.add("button", "button-secondary", "purchased");
+        const buttonPurchasedIcon = document.createElement("i");
+        buttonPurchasedIcon.classList.add(game.lo_tiene ? iconInPurchased : iconPurchased);
+        buttonPurchased.addEventListener("click", async () => {
+            const inPurchasedList = buttonPurchasedIcon.classList.contains(iconInPurchased);
+            
+            const actionSuccessful = await togglePurchased(game, inPurchasedList);
+            
+            if (!actionSuccessful) return;
+            
+            if (!inPurchasedList) buttonPurchasedIcon.className = iconInPurchased;
+            else buttonPurchasedIcon.className = iconPurchased;
+        });
+        
+        buttonPurchased.append(buttonPurchasedIcon);
+        
         const buttonBuy = document.createElement("a");
         buttonBuy.classList.add("button", "button-primary", "buy");
         let shopIcon = document.createElement("i");
@@ -86,7 +103,7 @@ async function fillCarousel(carousel, games) {
             buttonBuy.append(shopIcon, `Comprar en ${cheapShop.nombre}`);
         }
 
-        buttonsItem.append(buttonFavorite, buttonBuy);
+        buttonsItem.append(buttonFavorite, buttonPurchased, buttonBuy);
 
         containerInfoItem.append(containerCoverItem, titleItem, subtitleItem, descriptionItem, priceItem, buttonsItem);
 

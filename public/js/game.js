@@ -10,17 +10,20 @@ let sourceBackground;
 
 async function loadGameDetails() {
     try {
-        let wishList = [];
-        let gamesPurchased = [];
-
         const slug = location.href.split("/juego/")[1].split("/")[0];
-
+        
         const response = await fetch(`/api/juegos/${slug}`);
         const infoViewer = await getInfoUser();
-
+        
         const game = await response.json();
         gameData = game;
         allShops = game.Tiendas;
+        
+        let wishListViewer = await getWishListUser();
+        let purchasedListViewer = await getPurchasedListUser();
+
+        game.en_lista_de_deseos = wishListViewer.findIndex(gameWish => gameWish.id_juego == game.id) != -1;
+        game.lo_tiene = purchasedListViewer.findIndex(gamePurchased => gamePurchased.id_juego == game.id) != -1;
 
         imagesList = await getGameMedias(game.id);
 
@@ -65,7 +68,7 @@ async function loadGameDetails() {
 
             const favoriteButton = detailsContainer.querySelector(".button.favorite");
             const favoriteButtonIcon = document.createElement("i");
-            favoriteButtonIcon.classList.add(iconFavorite);
+            favoriteButtonIcon.classList.add(game.en_lista_de_deseos ? iconInFavorite : iconFavorite);
             favoriteButton.append(favoriteButtonIcon);
             favoriteButton.addEventListener("click", async () => {
                 const inWishList = favoriteButtonIcon.classList.contains(iconInFavorite);
@@ -76,6 +79,21 @@ async function loadGameDetails() {
 
                 if (!inWishList) favoriteButtonIcon.className = iconInFavorite;
                 else favoriteButtonIcon.className = iconFavorite;
+            });
+            
+            const purchasedButton = detailsContainer.querySelector(".button.purchased");
+            const purchasedButtonIcon = document.createElement("i");
+            purchasedButtonIcon.classList.add(game.lo_tiene ? iconInPurchased : iconPurchased);
+            purchasedButton.append(purchasedButtonIcon);
+            purchasedButton.addEventListener("click", async () => {
+                const inPurchasedList = purchasedButtonIcon.classList.contains(iconInPurchased);
+        
+                const actionSuccessful = await togglePurchased(game, inPurchasedList);
+
+                if (!actionSuccessful) return;
+
+                if (!inPurchasedList) purchasedButtonIcon.className = iconInPurchased;
+                else purchasedButtonIcon.className = iconPurchased;
             });
 
             const cheapShop = getCheapShop(game.Tiendas);

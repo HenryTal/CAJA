@@ -68,7 +68,7 @@
     --padding-bottom: 50px;
 
     position: absolute;
-    width: calc(50% - var(--blurring));
+    width: calc(55% - var(--blurring));
     height: calc(100% - var(--padding-bottom));
     max-height: 100%;
     top: 0;
@@ -83,10 +83,10 @@
 }
 
 .carousel-item .info .cover {
-    max-width: 450px;
-    height: 150px;
+    max-width: 250px;
 
-    aspect-ratio: 16 / 9;
+    align-self: center;
+    aspect-ratio: 3 / 1;
     background-color: var(--image-loading-bg-color);
     border-radius: 8px;
     overflow: hidden;

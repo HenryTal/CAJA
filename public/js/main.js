@@ -413,6 +413,14 @@ async function changeContent(url, containerID, searchContainerID, addToHistory) 
 function changePage(url, addToHistory) {
     // Los casos de posibles páginas a las que quiere ir el usuario.
     if (url == "/") navigateToHome(addToHistory); // Lleva a la página Inicio.
+    else if (url.split("#").length != 0) {
+        console.log(url);
+
+        let elementID = url.split("#");
+        elementID = elementID[elementID.length - 1];
+
+        scrollToElement(elementID);
+    }
     else if (url == "/test") testNavigation(addToHistory); // Lleva a la página test.
     else if (url == "/auth/logout") logOut();
     else if (url.startsWith("/juego/")) {
@@ -424,6 +432,19 @@ function changePage(url, addToHistory) {
         if (mainGame.innerHTML == "") changeContent(url, "main-game", "main", true);
     }
     else changeContent(url, "main", "main", addToHistory);
+}
+
+function scrollToElement(id) {
+    const element = document.getElementById(id);
+
+    if (!element) return;
+
+    const navbar = document.querySelector(".navbar");
+    const navbarHeight = navbar.offsetHeight;
+
+    element.style.scrollMarginTop = `${navbarHeight}px`;
+
+    element.scrollIntoView({ behavior: "smooth", block: "start" })
 }
 
 /**
@@ -551,6 +572,20 @@ function getCheapShop(tiendas) {
     tiendas.sort((a, b) => a.Juego_Tiendas.precio_actual - b.Juego_Tiendas.precio_actual);
     
     return tiendas[0];
+}
+
+async function getGameMedias(gameID) {
+    try {
+        const response = await fetch(`/api/juegos/${gameID}/medias`)
+                                .then(response => {
+                                    if (response.ok) return response.json();
+                                    else console.error(`Error al obtener las imagenes del juego con ID (${gameID}).`);
+                                })
+
+        return response;
+    } catch (error) {
+        console.log("Error al buscar imagenes: ", error);
+    }
 }
 
 /**
@@ -684,10 +719,8 @@ function createGameItem(game) {
     gameTitle.classList.add("title");
     gameTitle.textContent = game.titulo;
     
-    const gamePriceContainer = document.createElement("span");
+    const gamePriceContainer = getPrice(game.Tiendas);
     gamePriceContainer.classList.add("price");
-    
-    gamePriceContainer.innerHTML = getPrice(game.Tiendas).innerHTML;
     
     const gameButtonFavorite = document.createElement("button");
     gameButtonFavorite.classList.add("button", "button-secondary", "favorite");

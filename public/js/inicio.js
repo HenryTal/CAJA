@@ -100,17 +100,3 @@ async function fillCarousel(carousel, games) {
     startCarousel();
     imagesLoading();
 }
-
-async function getGameMedias(gameID) {
-    try {
-        const response = await fetch(`/api/juegos/${gameID}/medias`)
-                                .then(response => {
-                                    if (response.ok) return response.json();
-                                    else console.error(`Error al obtener las imagenes del juego con ID (${gameID}).`);
-                                })
-
-        return response;
-    } catch (error) {
-        console.log("Error al buscar imagenes: ", error);
-    }
-}

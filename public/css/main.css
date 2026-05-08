@@ -213,6 +213,11 @@ body[theme="light"] {
     padding: 3px 5px;
     border-radius: 2px;
 }
+.wrapper-item .price .offer {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
 .price .offer::before {
     content: "-";
 }
@@ -222,11 +227,16 @@ body[theme="light"] {
 }
 
 .price:has(.offer) .base {
+    font-size: var(--subtitle-size);
     text-decoration: line-through;
 }
 .price .base::after, .price .now::after {
     content: "€";
     margin-left: 3px;
+}
+
+.price .now, .price:not(:has(.now)) .base {
+    font-weight: var(--title-weight);
 }
 
 .loading *:is(.title, .subtitle, .price, .description, .section-title) {
@@ -301,7 +311,7 @@ body[theme="light"] {
     position: relative;
     left: 50%;
     transform: translateX(-50%);
-    width: 100%;
+    width: calc(100% - 10px);
     max-width: var(--container-max-width);
 }
 
@@ -753,5 +763,10 @@ input:-webkit-autofill {
 
 .notFound .item-image {
     width: 250px;
+    align-self: center;
+}
+
+.notFound .item-content {
+    width: fit-content;
     align-self: center;
 }

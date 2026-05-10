@@ -24,6 +24,19 @@ const listTiendas = [
     },
 ];
 
+async function getAllShops(req, res) {
+    try {
+        const shops = await Tienda.findAll();
+
+        res.status(200).json(shops);
+    } catch (error) {
+        res.status(500).json({ 
+            message: "Error al obtener las tiendas desde base de datos", 
+            error: error.message 
+        });
+    }
+}
+
 async function fillTable() {
     await Tienda.bulkCreate(listTiendas, { ignoreDuplicates: true });
 
@@ -46,4 +59,4 @@ async function fillTable() {
     }
 }
 
-module.exports = { fillTable };
+module.exports = { getAllShops, fillTable };

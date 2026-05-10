@@ -1,0 +1,74 @@
+<link rel="stylesheet" href="/css/search.css">
+<div id="main">
+    <div class="section">
+        <div class="container row">
+            <form action="" id="filter">
+                <h2 class="title">Filtros</h2>
+                <h3 class="subtitle">Fecha de Lanzamiento</h3>
+                <div class="field-multiple date-released">
+                    <div class="field" data-label="Desde">
+                        <input type="date" name="date-released-from" placeholder="Desde" id="dateReleasedFrom">
+                    </div>
+                    <div class="field" data-label="Hasta">
+                        <input type="date" name="date-released-to" placeholder="Hasta" id="dateReleasedTo">
+                    </div>
+                </div>
+                <h3 class="subtitle">Precio</h3>
+                <div class="field-multiple price">
+                    <div class="field" data-label="Min">
+                        <input type="number" name="price-from" placeholder="Min" id="priceFrom">
+                    </div>
+                    <div class="field" data-label="Max">
+                        <input type="number" name="price-to" placeholder="Max" id="priceTo">
+                    </div>
+                </div>
+                <div class="item field checkboxes-simplified genres">
+                    <h3 class="subtitle">Genero</h3>
+                    <div class="wrapper" id="genre"></div>
+                </div>
+                <div class="item field checkboxes-simplified platforms">
+                    <h3 class="subtitle">Plataforma</h3>
+                    <div class="wrapper" id="platform"></div>
+                </div>
+                <div class="item field checkboxes-simplified shops">
+                    <h3 class="subtitle">Tienda</h3>
+                    <div class="wrapper" id="shop"></div>
+                </div>
+            </form>
+            <div class="wrapper" id="results">
+                <div class="wrapper-items">
+                    <div class="wrapper-item loading">
+                        <div class="item-image cover"></div>
+                        <div class="item-content">
+                            <h4 class="subtitle"></h4>
+                            <h3 class="title"></h3>
+                            <span class="price"></span>
+                        </div>
+                    </div>
+                    <div class="wrapper-item loading">
+                        <div class="item-image cover"></div>
+                        <div class="item-content">
+                            <div class="subtitle"></div>
+                            <div class="title"></div>
+                            <div class="price"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="info loading">
+                <div class="subtitle counter"></div>
+                <div class="page">
+                    <form action="" id="numberPage">
+                        <div class="item field">
+                            <input type="number" name="page" id="page" min="0">
+                            <span class="title total"></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/search.js"></script>

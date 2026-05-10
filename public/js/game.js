@@ -1,12 +1,17 @@
 loadGameDetails();
 
-let gameData;
+function getGameThumb(imagesList) {
+    let sourceThumb = imagesList.filter(image => image.id_image.startsWith("ar"));
+    sourceThumb = sourceThumb[sourceThumb.length - 1];
 
-let allShops;
-let imagesList;
+    return sourceThumb;
+}
 
-let sourceThumb;
-let sourceBackground;
+function getGameBackground(imagesList) {
+    let sourceBackground = imagesList.filter(image => !image.id_image.startsWith("ar"))[0];
+
+    return sourceBackground;
+}
 
 async function loadGameDetails() {
     try {
@@ -16,8 +21,8 @@ async function loadGameDetails() {
         const infoViewer = await getInfoUser();
         
         const game = await response.json();
-        gameData = game;
-        allShops = game.Tiendas;
+        let gameData = game;
+        let allShops = game.Tiendas;
         
         let wishListViewer = await getWishListUser();
         let purchasedListViewer = await getPurchasedListUser();
@@ -27,9 +32,8 @@ async function loadGameDetails() {
 
         imagesList = await getGameMedias(game.id);
 
-        sourceThumb = await imagesList.filter(image => image.id_image.startsWith("ar"));
-        sourceThumb = sourceThumb[sourceThumb.length - 1];
-        sourceBackground = await imagesList.filter(image => !image.id_image.startsWith("ar"))[0];
+        let sourceThumb = getGameThumb(imagesList);
+        let sourceBackground = getGameBackground(imagesList);
 
         if (response.ok) {
             const detailsContainer = document.querySelector(".section.details");
@@ -123,7 +127,7 @@ async function loadGameDetails() {
             const descriptionContainer = detailsContainer.querySelector(".description");
             descriptionContainer.textContent = game.descripcion;
 
-            getOtherShops();
+            getOtherShops(allShops);
 
             imagesLoading();
             detailsContainer.classList.remove("loading");
@@ -133,7 +137,7 @@ async function loadGameDetails() {
     } catch (error) { console.error(error) }
 }
 
-function getOtherShops() {
+function getOtherShops(allShops) {
     try {
         const containerShops = document.querySelector(".others-shops");
 

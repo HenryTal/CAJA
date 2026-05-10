@@ -1,0 +1,67 @@
+#filter {
+    max-width: 300px;
+}
+
+.field {
+    max-height: 380px;
+    overflow: hidden;
+}
+
+.field-multiple .field {
+    width: 45%;
+}
+
+.field-checkbox {
+    flex-direction: row;
+}
+
+.field-checkbox .image {
+    width: 20px;
+}
+
+.container.row {
+    display: flex;
+    gap: 40px;
+}
+
+.container #results {
+    width: calc(var(--container-max-width) - 300px);
+    border-radius: 8px;
+}
+
+#results .wrapper-item {
+    width: calc(100% / 5);
+}
+
+#results .wrapper-item .item-image {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: 8px;
+}
+
+#results .info {
+    display: flex;
+    justify-content: end;
+}
+
+.info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.info #numberPage .field {
+    flex-direction: row;
+    gap: 10px;
+}
+
+.info #numberPage .field input {
+    text-align: center;
+    width: 20px;
+    padding: 5px 15px;
+}
+
+.info .total {
+    display: block;
+    min-width: 60px;
+}

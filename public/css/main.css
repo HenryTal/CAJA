@@ -301,6 +301,12 @@ body[theme="light"] {
     gap: 40px;
     margin-bottom: 50px;
 }
+#main[data-game-details="true"] {
+    display: none;
+}
+body:has(#main[data-game-details="false"]) #main-game {
+    display: none;
+}
 
 .section {
     position: relative;
@@ -431,6 +437,11 @@ form {
     color: var(--text-color);
     z-index: 2;
     transition: .2s ease border;
+    caret-color: var(--primary-color);
+}
+.field input::-webkit-outer-spin-button, .field input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 .field input:focus, .field select:focus {
     --input-color: var(--primary-color);
@@ -591,6 +602,7 @@ form {
 
 input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px var(--form-bg-color) inset !important;
+    -webkit-text-fill-color: var(--text-color) !important;
 }
 
 #notification-wrapper {

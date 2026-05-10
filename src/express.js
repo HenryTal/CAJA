@@ -11,6 +11,9 @@ const imagesRouter = require("../routes/images");
 const juegosRouter = require("../routes/juegos");
 const apiUsuariosRouter = require("../routes/api/usuarios");
 const apiJuegosRouter = require("../routes/api/juegos");
+const apiGenerosRouter = require("../routes/api/generos");
+const apiPlataformasRouter = require("../routes/api/plataformas");
+const apiTiendasRouter = require("../routes/api/tiendas");
 const authRouter = require("../routes/auth");
 
 // Definición de la extención de los archivos para render.
@@ -30,5 +33,8 @@ app.use('/image/', imagesRouter);
 app.use('/juego/', juegosRouter);
 app.use('/api/juegos/', apiJuegosRouter);
 app.use('/api/usuarios/', apiUsuariosRouter);
+app.use('/api/generos/', apiGenerosRouter);
+app.use('/api/plataformas/', apiPlataformasRouter);
+app.use('/api/tiendas/', apiTiendasRouter);
 
 module.exports = app;

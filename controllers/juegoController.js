@@ -8,10 +8,17 @@ const Juego_Tiendas = require("../models/Juego_Tiendas");
 
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+/**
+ * Obtiene las plataformas de un juego buscado por su ID.
+ * @param {*} req - Datos introducidos en la petición.
+ * @param {*} res - Resultado de la petición.
+ */
 async function getPlataformas(req, res) {
     try {
+        // El ID introducido en la petición.
         let gameID = req.body.id_juego;
 
+        // Busca en la tabla
         let plataformas = await Juego_Plataformas.findAll({ 
             include: [{
                 model: Plataforma,

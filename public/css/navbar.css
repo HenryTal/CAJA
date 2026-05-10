@@ -37,6 +37,33 @@
     padding: 0 20px;
 }
 
+.navbar #formSearch {
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+}
+
+.navbar .item-menu:has(.field.search) form, .navbar .item-menu:has(.field.search) {
+    display: flex;
+    align-self: center;
+}
+.navbar .item-menu .field.search {
+    padding: 0;
+    align-self: center;
+}
+.navbar .item-menu .field.search::after {
+    background-color: var(--nav-bg-color);
+}
+.navbar .item-menu .field.search input {
+    border-radius: 10px 0 0 10px;
+}
+.navbar .item-menu:has(.field.search) .button {
+    height: min-content;
+    align-self: center;
+    border-radius: 0 10px 10px 0;
+    padding: 13px 15px;
+}
+
 .navbar .containerSettings {
     display: flex;
     gap: 20px;

@@ -19,6 +19,18 @@ function loadFunctions() {
 
     const menuUser = document.getElementById("dataUser");
     menuUser.addEventListener("click", toggleMenuUser);
+
+    const searchInput = document.getElementById("inputSearch");
+    const params = new URLSearchParams(window.location.search);
+    searchInput.value = params.get("query");
+
+    const formSearch = document.getElementById("formSearch");
+    formSearch.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        changeContent(`/search?query=${searchInput.value}`, "main", "main", true);
+    });
+
 }
 
 
@@ -360,43 +372,25 @@ async function changeContent(url, containerID, searchContainerID, addToHistory) 
     // Si debe agregarla al historial lo agrega.
     if (addToHistory) window.history.pushState({}, page.title, url);
 
+    window.document.title = page.title;
+
     let newStyles = Array.from(page.querySelectorAll('link[rel="stylesheet"]'));
     let oldStyles = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
-    oldStyles = oldStyles;
     
     stylesToLoad = newStyles.filter(newStyle => !oldStyles.some(oldStyle => oldStyle.href === newStyle.href));
     
+    stylesToLoad.forEach(style => {
+        document.head.append(style);
+    });
+
     let newScripts = Array.from(page.querySelectorAll("script"));
     let oldScripts = Array.from(document.querySelectorAll("script"));
 
     oldScripts.forEach(script => script.remove());
-    
-    // scriptsToLoad = newScripts.filter(newScript => !oldScripts.some(oldScript => oldScript.src === newScript.src));
 
-    stylesToLoad.forEach(style => {
-        document.head.appendChild(style);
-    });
     newScripts.forEach(script => {
         const newScript = document.createElement("script");
         newScript.src = script.src;
-
-        newScript.onload = () => {
-            // if (typeof startCarousel === "function") {
-            //     startCarousel();
-            // }
-            // if (typeof loadFunctions === "function") {
-            //     loadFunctions();
-            // }
-            // if (typeof loadTrendingGames === "function") {
-            //     loadTrendingGames();
-            // }
-            // if (typeof loadLoginFunctions === "function") {
-            //     loadLoginFunctions();
-            // }
-            // if (typeof loadUserDetails === "function") {
-            //     // loadUserDetails();
-            // }
-        }
 
         document.body.appendChild(newScript);
     });
@@ -415,7 +409,19 @@ async function changeContent(url, containerID, searchContainerID, addToHistory) 
 
 function changePage(url, addToHistory) {
     // Los casos de posibles páginas a las que quiere ir el usuario.
-    if (url == "/") navigateToHome(addToHistory); // Lleva a la página Inicio.
+    // if (url == "/" && location.href.includes("/juego/")) {
+    //     const urlFrom = location.href;
+    //     const slug = urlFrom.split(location.origin)[1].split("/")[2];
+    //     console.log("Volviendo a Inicio desde el Juego", slug);
+    
+    //     const mainActual = document.getElementById("main");
+    //     mainActual.setAttribute("data-game-details", false);
+    //     const mainGame = document.getElementById("main-game");
+    
+    //     changeContent(url, "main", "main", true);
+        
+    // }
+    /*else*/ if (url == "/") navigateToHome(addToHistory); // Lleva a la página Inicio.
     else if (url.split("#").length != 1) {
         console.log(url);
 
@@ -426,14 +432,16 @@ function changePage(url, addToHistory) {
     }
     else if (url == "/test") testNavigation(addToHistory); // Lleva a la página test.
     else if (url == "/auth/logout") logOut();
-    else if (url.startsWith("/juego/")) {
-        const slug = url.split("/")[2];
-        console.log("Mostrando Juego", slug);
+    // else if (url.startsWith("/juego/")) {
+    //     const slug = url.split("/")[2];
+    //     console.log("Mostrando Juego", slug);
 
-        const mainGame = document.getElementById("main-game");
+    //     const mainActual = document.getElementById("main");
+    //     mainActual.setAttribute("data-game-details", true);
+    //     const mainGame = document.getElementById("main-game");
 
-        if (mainGame.innerHTML == "") changeContent(url, "main-game", "main", true);
-    }
+    //     changeContent(url, "main-game", "main", true);
+    // }
     else changeContent(url, "main", "main", addToHistory);
 }
 

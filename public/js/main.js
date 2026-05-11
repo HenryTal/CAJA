@@ -542,7 +542,7 @@ function applyDiscounts(wrapper) {
     })
 }
 
-function getDiscounts(priceNow, priceBase) {
+function getDiscounts(priceNow = 0, priceBase = 0) {
     const priceContainer = document.createElement("span");
     const priceBaseContainer = document.createElement("span");
     priceBaseContainer.classList.add("base");
@@ -564,7 +564,7 @@ function getDiscounts(priceNow, priceBase) {
 }
 
 function getPrice(tiendas) {
-    if (!tiendas) {
+    if (tiendas.length == 0) {
         const priceContainer = document.createElement("span");
         const priceBase = document.createElement("span");
         priceBase.classList.add("base");
@@ -575,7 +575,7 @@ function getPrice(tiendas) {
     }
     
     const cheapShop = getCheapShop(tiendas);
-    
+
     return getDiscounts(cheapShop.Juego_Tiendas.precio_actual, cheapShop.Juego_Tiendas.precio_base);
 }
 

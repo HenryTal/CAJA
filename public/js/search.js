@@ -3,36 +3,124 @@ loadFilters();
 async function loadFilters() {
     const formFilter = document.getElementById("filter");
     const query = new URLSearchParams(window.location.search);
+    
+    let gamesPerPage = parseInt(query.get("show")) || 20;
+    
+    const resultsContainer = document.getElementById("results");
+    const resultsWrapperItems = resultsContainer.querySelector(".wrapper-items");
+    
+    for (let i = 0; i < gamesPerPage - 1; i++) {
+        let newItemLayOut = resultsWrapperItems.children[0].cloneNode(true);
+        resultsWrapperItems.append(newItemLayOut);
+    }
 
+    const containerGenres = document.querySelector(".field.genres");
+    const containerWrapperGenres = containerGenres.querySelector(".wrapper");
+    
+    if (!containerWrapperGenres.children[0]) {
+        const allGenres = await getAllGenres();
+        containerWrapperGenres.append(...createCheckBoxList("genre", allGenres));
+    }
+
+    const containerPlatforms = document.querySelector(".field.platforms");
+    const containerWrapperPlatforms = containerPlatforms.querySelector(".wrapper");
+
+    if (!containerWrapperPlatforms.children[0]) {
+        const allPlatforms = await getAllPlatforms();
+        containerWrapperPlatforms.append(...createCheckBoxList("platform", allPlatforms));
+    }
+
+    const containerShops = document.querySelector(".field.shops");
+    const containerWrapperShops = containerShops.querySelector(".wrapper");
+
+    if (!containerWrapperShops.children[0]) {
+        const allShops = await getAllShops();
+        containerWrapperShops.append(...createCheckBoxList("shop", allShops));
+    }
+    
     formFilter.addEventListener("change", (e) => {
-        console.log(`Se ha cambiado el filtro ${e.target.name} ha ${e.target.value}.`);
-
         let dataForm = new FormData(formFilter);
 
-        if (dataForm.has("genres")) dataForm.delete("genres");
-        else if (dataForm.has("platforms")) dataForm.delete("platforms");
+        query.delete("genre");
+        query.delete("platform");
+        query.delete("shop");
+
+        if (dataForm.has("genre")) dataForm.delete("genres");
+        else if (dataForm.has("platform")) dataForm.delete("platforms");
+        else if (dataForm.has("shop")) dataForm.delete("shops");
 
         for (const [name, value] of dataForm.entries()) {
             if (value.trim() !== "") query.set(name, value);
             else query.delete(name);
         }
 
-        changePage(`/search?${query.toString()}`, true);
+        changeContent(`/search?${query.toString()}`, "results", "results", true);
     });
+    
+    const foundGames = await getGames(query);
 
-    const containerGenres = document.querySelector(".field.genres");
-    const allGenres = await getAllGenres();
-    containerGenres.append(...createCheckBoxList(allGenres));
+    if (!foundGames.rows || foundGames.count == 0) {
+        resultsWrapperItems.innerHTML = "";
+        resultsWrapperItems.append(gamesNotFound());
+        imagesLoading();
+        return;
+    }
+    
+    let actualPage = parseInt(query.get("page")) || 1;
+    let pages = Math.round(foundGames.count / gamesPerPage) || 1;
+    
+    if (actualPage > pages) {
+        query.set("page", pages);
+        changePage(`/search?${query.toString()}`, true);
+    }
 
-    const containerPlatforms = document.querySelector(".field.platforms");
-    const allPlatforms = await getAllPlatforms();
-    containerPlatforms.append(...createCheckBoxList(allPlatforms));
+    const counter = document.querySelector(".counter");
+    const showing = (gamesPerPage * actualPage) > foundGames.count ? foundGames.count : (gamesPerPage * actualPage);
+    counter.textContent = `Mostrando ${showing} de ${foundGames.count} Juegos.`;
+    
+    const numberPage = document.getElementById("numberPage");
+    const pageInput = numberPage.querySelector("#page");
+    pageInput.value = actualPage;
+    const pageMaxLink = document.createElement("a");
+    pageMaxLink.classList.add("link");
+    pageMaxLink.textContent = pages;
+    let copyQuery = new URLSearchParams(query.toString());
+    copyQuery.set("page", (pages));
+    pageMaxLink.href = `/search?${copyQuery.toString()}`;
+    numberPage.querySelector(".total").innerHTML = "";
+    numberPage.querySelector(".total").append("de ", pageMaxLink);
 
-    const containerShops = document.querySelector(".field.shops");
-    const allShops = await getAllShops();
-    containerShops.append(...createCheckBoxList(allShops));
+    document.querySelector(".info").classList.remove("loading");
+
+    resultsWrapperItems.innerHTML = "";
+
+    for (const game of foundGames.rows) {
+        resultsWrapperItems.append(createGameItem(game));
+    }
 
     imagesLoading();
+}
+
+async function getGames(filter) {
+    try {
+        const response = await fetch(`/api/juegos?${filter}`);
+
+        if (response.ok) {
+            const data = response.json();
+
+            return data;
+        } else {
+            return {
+                message: "Error al obtener los juegos con esos filtros.",
+                error: response.message
+            };
+        }
+    } catch (error) {
+        return {
+            message: "Error al realizar la consulta al servidor.",
+            error: response.message
+        };
+    }
 }
 
 /**
@@ -40,18 +128,18 @@ async function loadFilters() {
  * @param {JSON} list - JSON con los elementos de la lista.
  * @returns Un Array de elementos HTML.
  */
-function createCheckBoxList(list) {
+function createCheckBoxList(nameList, list) {
     const containerList = document.createElement("div");
 
-    containerList.append(createCheckBox("Todos", ""));
+    containerList.append(createCheckBox(nameList, "Todos", ""));
 
     const query = new URLSearchParams(window.location.search);
     
     for (const checkBox of list) {
         let icon = checkBox.icon ? checkBox.icon : checkBox.id;
 
-        const checkBoxCreated = createCheckBox(checkBox.nombre, checkBox.nombre, icon);
-        checkBoxCreated.querySelector('input[type="checkbox"').checked = query.getAll("genre").includes(checkBox.nombre);
+        const checkBoxCreated = createCheckBox(nameList, checkBox.nombre, checkBox.nombre, icon);
+        checkBoxCreated.querySelector('input[type="checkbox"').checked = query.getAll(nameList).includes(checkBox.nombre);
 
         containerList.append(checkBoxCreated);
     }
@@ -65,19 +153,19 @@ function createCheckBoxList(list) {
  * @param {String} value - Valor del Checkbox.
  * @returns {HTMLInputElement} - El elemento checkbox.
  */
-function createCheckBox(name, value, icon) {
+function createCheckBox(nameList, name, value, icon) {
     const container = document.createElement("div");
-    container.classList.add("field-checkbox", "genre");
+    container.classList.add("field-checkbox", nameList);
     
     const checkBox = document.createElement("input");
     checkBox.setAttribute("type", "checkbox");
-    checkBox.setAttribute("name", "genre");
+    checkBox.setAttribute("name", nameList);
     checkBox.classList.add("checkGenre");
     checkBox.value = value;
-    checkBox.id = `genre-${value}`;
+    checkBox.id = `${nameList}-${value}`;
 
     const label = document.createElement("label");
-    label.setAttribute("for", `genre-${value}`);
+    label.setAttribute("for", `${nameList}-${value}`);
 
     let iconLabel = document.createElement("i");
     iconLabel.classList.add(icon);

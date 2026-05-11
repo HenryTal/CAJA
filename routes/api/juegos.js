@@ -4,6 +4,8 @@ const router = express.Router();
 const juegoController = require("../../controllers/juegoController");
 const plataformaController = require("../../controllers/plataformaController");
 
+router.get("/", juegoController.getJuegos);
+
 router.get('/tendencias', juegoController.getTendencias);
 
 const fs = require('fs').promises;

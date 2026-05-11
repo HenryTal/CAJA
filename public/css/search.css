@@ -2,9 +2,14 @@
     max-width: 300px;
 }
 
-.field {
+.field.checkboxes-simplified {
     max-height: 380px;
-    overflow: hidden;
+}
+.field.checkboxes-simplified .wrapper {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    gap: 5px;
 }
 
 .field-multiple .field {
@@ -29,14 +34,20 @@
     border-radius: 8px;
 }
 
+#results .wrapper-items {
+    flex-wrap: wrap;
+}
+
 #results .wrapper-item {
-    width: calc(100% / 5);
+    position: relative;
+    width: calc((100% - 40px) / 5);
 }
 
 #results .wrapper-item .item-image {
     width: 100%;
     aspect-ratio: 3 / 4;
     border-radius: 8px;
+    overflow: hidden;
 }
 
 #results .info {
@@ -52,7 +63,9 @@
 
 .info #numberPage .field {
     flex-direction: row;
+    align-items: center;
     gap: 10px;
+    margin: 0;
 }
 
 .info #numberPage .field input {
@@ -61,7 +74,7 @@
     padding: 5px 15px;
 }
 
-.info .total {
+.info.loading .total {
     display: block;
     min-width: 60px;
 }

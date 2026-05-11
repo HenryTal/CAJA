@@ -7,6 +7,11 @@ const Plataforma = sequelize.define("Plataforma", {
         primaryKey: true,
         autoIncrement: true
     },
+    id_rawg: {
+        type: DataTypes.INTEGER,
+        unique: true,
+        allowNull: true
+    },
     nombre: {
         type: DataTypes.STRING,
         unique: true,

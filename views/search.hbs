@@ -4,7 +4,7 @@
         <div class="container row">
             <form action="" id="filter">
                 <h2 class="title">Filtros</h2>
-                <h3 class="subtitle">Fecha de Lanzamiento</h3>
+                {{!-- <h3 class="subtitle">Fecha de Lanzamiento</h3>
                 <div class="field-multiple date-released">
                     <div class="field" data-label="Desde">
                         <input type="date" name="date-released-from" placeholder="Desde" id="dateReleasedFrom">
@@ -21,7 +21,7 @@
                     <div class="field" data-label="Max">
                         <input type="number" name="price-to" placeholder="Max" id="priceTo">
                     </div>
-                </div>
+                </div> --}}
                 <div class="item field checkboxes-simplified genres">
                     <h3 class="subtitle">Genero</h3>
                     <div class="wrapper" id="genre"></div>
@@ -53,10 +53,12 @@
                 <div class="subtitle counter"></div>
                 <div class="page">
                     <form action="" id="numberPage">
+                        <div class="button button-prev disabled"><i class="ri-arrow-left-s-line"></i></div>
                         <div class="item field">
                             <input type="number" name="page" id="page" min="1">
                             <span class="title total"></span>
                         </div>
+                        <div class="button button-next disabled"><i class="ri-arrow-right-s-line"></i></div>
                     </form>
                 </div>
             </div>

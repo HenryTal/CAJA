@@ -71,7 +71,7 @@ async function loadFilters() {
     
     if (actualPage > pages) {
         query.set("page", pages);
-        changePage(`/search?${query.toString()}`, true);
+        changeContent(`/search?${query.toString()}`, "results", "results", true);
     }
 
     const counter = document.querySelector(".counter");
@@ -79,11 +79,34 @@ async function loadFilters() {
     counter.textContent = `Mostrando ${showing} de ${foundGames.count} Juegos.`;
     
     const numberPage = document.getElementById("numberPage");
+
+    const buttonPrev = numberPage.querySelector(".button-prev");
+    if (actualPage != 1) buttonPrev.classList.remove("disabled");
+    buttonPrev.addEventListener("click", () => {
+        if (buttonPrev.classList.contains("disabled")) return;
+
+        let copyQuery = new URLSearchParams(query.toString());
+        copyQuery.set("page", (actualPage - 1));
+        changeContent(`/search?${copyQuery.toString()}`, "results", "results", true);
+    });
+
+    const buttonNext = numberPage.querySelector(".button-next");
+    if (actualPage != pages) buttonNext.classList.remove("disabled");
+    buttonNext.addEventListener("click", () => {
+        if (buttonNext.classList.contains("disabled")) return;
+
+        let copyQuery = new URLSearchParams(query.toString());
+        copyQuery.set("page", (actualPage + 1));
+        changeContent(`/search?${copyQuery.toString()}`, "results", "results", true);
+    });
+    
     const pageInput = numberPage.querySelector("#page");
     pageInput.value = actualPage;
+    
     const pageMaxLink = document.createElement("a");
     pageMaxLink.classList.add("link");
     pageMaxLink.textContent = pages;
+    
     let copyQuery = new URLSearchParams(query.toString());
     copyQuery.set("page", (pages));
     pageMaxLink.href = `/search?${copyQuery.toString()}`;

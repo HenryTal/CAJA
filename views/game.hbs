@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/css/carousel.css">
 <link rel="stylesheet" href="/css/game.css">
 <div id="main">
     <div class="section details loading">
@@ -30,14 +31,23 @@
         <div class="container">
             <h2 class="title">Sobre este Juego</h2>
             <div class="item-content">
-                <div class="description"></div>
                 <div class="wrapper genres">
-                    <div class="wrapper-item loading"></div>
-                    <div class="wrapper-item loading"></div>
-                    <div class="wrapper-item loading"></div>
-                    <div class="wrapper-item loading"></div>
-                    <div class="wrapper-item loading"></div>
+                    <div class="wrapper-items">
+                        <div class="wrapper-item loading"></div>
+                        <div class="wrapper-item loading"></div>
+                        <div class="wrapper-item loading"></div>
+                        <div class="wrapper-item loading"></div>
+                        <div class="wrapper-item loading"></div>
+                    </div>
                 </div>
+            </div>
+        </div>
+        <div class="container gallery">
+            <div class="carousel gallery autoslide" data-interval="4000">
+                <div class="carousel-items animate"></div>
+            </div>
+            <div class="wrapper gallery-previews">
+                <div class="wrapper-items"></div>
             </div>
         </div>
         <div class="container" id="others-shops">
@@ -48,4 +58,5 @@
         </div>
     </div>
 </div>
+<script src="/js/carousel.js"></script>
 <script src="/js/game.js"></script>

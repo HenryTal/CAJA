@@ -38,6 +38,10 @@ async function getAllShops(req, res) {
 }
 
 async function fillTable() {
+    const rows = await Tienda.count();
+
+    if (rows != 0) return;
+
     await Tienda.bulkCreate(listTiendas, { ignoreDuplicates: true });
 
     try {

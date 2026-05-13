@@ -400,6 +400,10 @@ async function getJuego(slug) {
                 {
                     model: Plataforma,
                     through: { attributes: [] }
+                },
+                {
+                    model: Genero,
+                    through: { attributes: [] }
                 }
             ]
         });

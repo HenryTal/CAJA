@@ -38,10 +38,10 @@
     margin: 20px;
 }
 
-.section.details .item-content .platforms {
+.section.details .item-content .platforms, .section.about .genres {
     font-size: var(--subtitle-size);
 }
-.section.details .item-content .platforms .wrapper-item {
+.section.details .item-content .platforms .wrapper-item, .section.about .genres .wrapper-item {
     padding: 8px;
     border-radius: 3px;
     background-color: var(--badget-bg-color);
@@ -118,6 +118,25 @@
     height: 100%;
 }
 
+.container.gallery {
+    margin: 10px 0 20px 0;
+}
+
+.gallery-previews {
+    margin-top: 20px;
+}
+
+.gallery-previews .wrapper-items {
+    justify-content: center;
+}
+
+.gallery-previews .carousel-item {
+    width: 100px;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
 .loading .title {
     height: 30px;
 }
@@ -133,7 +152,7 @@
     margin: 20px 0;
 }
 
-.loading .platforms .wrapper-item {
+.loading .platforms .wrapper-item, .loading .genres .wrapper-item {
     width: 100px;
     height: 30px;
     background-color: var(--image-loading-bg-color);

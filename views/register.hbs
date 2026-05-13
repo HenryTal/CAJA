@@ -5,33 +5,33 @@
             <form autocomplete="on" method="post" id="form-register">
                 <h2 class="title">Crear una Cuenta en CAJA</h2>
                 <div class="field name" data-label="Nombre">
-                    <input type="text" name="name" id="name" placeholder="Nombre" required>
+                    <input type="text" name="name" id="name" placeholder="Nombre">
                 </div>
                 <div class="field lastname" data-label="Apellidos">
-                    <input type="text" name="lastname" id="lastname" placeholder="Apellidos" required>
+                    <input type="text" name="lastname" id="lastname" placeholder="Apellidos">
                 </div>
                 <div class="field username" data-label="Nombre de Usuario">
-                    <input type="text" name="username" id="username" placeholder="Nombre de Usuario" required>
+                    <input type="text" name="username" id="username" placeholder="Nombre de Usuario">
                 </div>
                 <div class="field email" data-label="Correo Electronico">
-                    <input type="email" name="email" id="email" placeholder="Correo Electronico" required>
+                    <input type="text" name="email" id="email" placeholder="Correo Electronico">
                 </div>
                 <div class="field password" data-label="Contraseña">
                     <button class="button show-password" type="button"><i class="ri-eye-close-line"></i></button>
-                    <input type="password" name="password" id="password" placeholder="Contraseña" required>
+                    <input type="password" name="password" id="password" placeholder="Contraseña">
                 </div>
                 <div class="field password" data-label="Repetir Contraseña">
                     <button class="button show-password" type="button"><i class="ri-eye-close-line"></i></button>
-                    <input type="password" name="repassword" id="repassword" placeholder="Repetir Contraseña" required>
+                    <input type="password" name="repassword" id="repassword" placeholder="Repetir Contraseña">
                 </div>
                 <button type="submit" class="button button-primary">Registrarse</button>
                 <div class="info">
                     <p class="register-info">¿Ya tienes una cuenta? <a href="/auth/login" class="link">Iniciar Sesión</a></p>
                 </div>
             </form>
-            <ul class="terms">
+            {{!-- <ul class="terms">
                 <li class="item-list"><a href="/" class="link">Terminos y Condiciones</a></li>
-            </ul>
+            </ul> --}}
         </div>
     </div>
 </div>

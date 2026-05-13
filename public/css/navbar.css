@@ -9,7 +9,7 @@
 
 .navbar .container {
     width: 100%;
-    max-width: var(--navbar-container-max-width);
+    max-width: var(--navbar-container-max-width) !important;
     display: flex;
     justify-content: space-around;
     justify-self: center;
@@ -28,6 +28,10 @@
 .navbar .menu {
     display: flex;
     gap: 5px;
+    /* transition: .2s ease transform; */
+}
+body:has(#form-login, #form-register) .navbar .menu {
+    transform: translateY(-100%) !important;
 }
 
 .navbar .menu .item-menu .link {
@@ -62,6 +66,7 @@
     align-self: center;
     border-radius: 0 10px 10px 0;
     padding: 13px 15px;
+    margin: 0;
 }
 
 .navbar .containerSettings {
@@ -89,6 +94,7 @@
     background-color: var(--profile-bg-color);
     border-radius: 50%;
     border: var(--profile-border-size) solid var(--profile-border-color);
+    cursor: pointer;
     overflow: hidden;
 }
 

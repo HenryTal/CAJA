@@ -56,6 +56,8 @@ var iconShowPassword = "ri-eye-close-line";
 var iconHiddenPassword = "ri-eye-line";
 // Clase para el icono de sin stock.
 var iconWithoutStock = "ri-emotion-unhappy-line";
+// Clase para el icono de sin stock.
+var iconErrorField = "ri-information-fill";
 
 
 
@@ -147,11 +149,9 @@ async function toggleMenuUser() {
     menuElements.push(createElementMenu("settings", "link", "ri-settings-5-line", "Configuración", "/settings"));
     menuElements.push(createElementMenu("settings", "split"));
 
-    const isRegistered = getToken();
-    
-    if (isRegistered) {
-        const infoUser = await getInfoUser();
+    const infoUser = await getInfoUser();
 
+    if (infoUser.id) {
         menuElements.unshift(
             createElementMenu("settings", "link", "ri-user-line", "Perfil", `/usuario/${infoUser.nombre_usuario}`),
             createElementMenu("settings", "link", "ri-book-shelf-line", "Biblioteca", "/library"),
@@ -376,8 +376,12 @@ async function changeContent(url, containerID, searchContainerID, addToHistory) 
 
     let newStyles = Array.from(page.querySelectorAll('link[rel="stylesheet"]'));
     let oldStyles = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
-    
+
     stylesToLoad = newStyles.filter(newStyle => !oldStyles.some(oldStyle => oldStyle.href === newStyle.href));
+    
+    let stylesToRemove = oldStyles.filter(oldStyle => !newStyles.some(newStyle => newStyle.href === oldStyle.href));
+
+    stylesToRemove.forEach(style => style.remove());
     
     stylesToLoad.forEach(style => {
         document.head.append(style);

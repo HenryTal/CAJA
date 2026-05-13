@@ -34,6 +34,10 @@ async function getAllPlatforms(req, res) {
 }
 
 async function fillTable() {
+    const rows = Plataforma.count();
+
+    if (rows != 0) return;
+    
     await Plataforma.bulkCreate(listPlataformas, { ignoreDuplicates: true });
 
     try {

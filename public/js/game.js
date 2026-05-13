@@ -30,7 +30,7 @@ async function loadGameDetails() {
         game.en_lista_de_deseos = wishListViewer.findIndex(gameWish => gameWish.id_juego == game.id) != -1;
         game.lo_tiene = purchasedListViewer.findIndex(gamePurchased => gamePurchased.id_juego == game.id) != -1;
 
-        imagesList = await getGameMedias(game.id);
+        let imagesList = await getGameMedias(game.id);
 
         let sourceThumb = getGameThumb(imagesList);
         let sourceBackground = getGameBackground(imagesList);
@@ -126,6 +126,54 @@ async function loadGameDetails() {
 
             const descriptionContainer = detailsContainer.querySelector(".description");
             descriptionContainer.textContent = game.descripcion;
+
+            const aboutSection = document.querySelector(".section.about");
+            
+            const genresWrapper = aboutSection.querySelector(".wrapper.genres");
+            const genresWrapperItems = genresWrapper.querySelector(".wrapper-items");
+            genresWrapperItems.innerHTML = "";
+            for (let genre of game.Generos) {
+                const genreItem = document.createElement("h4");
+                genreItem.classList.add("wrapper-item", `genre-${genre.id}`);
+                
+                const genreItemIcon = document.createElement("i");
+                genreItemIcon.classList.add(genre.icon);
+                
+                genreItem.append(genreItemIcon, genre.nombre);
+                genresWrapperItems.append(genreItem);
+            }
+
+            const galleryContainer = aboutSection.querySelector(".container.gallery");
+            const galleryItemsContainer = aboutSection.querySelector(".carousel-items");
+            const galleryPreviewsContainer = aboutSection.querySelector(".gallery-previews");
+            const galleryPreviewsItems = galleryPreviewsContainer.querySelector(".wrapper-items");
+
+            for (let image of imagesList) {
+                if (image.id_image.includes("ar")) continue;
+                
+                const carouselItem = document.createElement("div");
+                carouselItem.classList.add("carousel-item");
+                
+                const imageContainer = document.createElement("div");
+                imageContainer.classList.add("item-image");
+
+                const imageSource = document.createElement("img");
+                imageSource.classList.add("image", "img-loading");
+                imageSource.src = `/image/medias/${image.id_image}.jpg`;
+                
+                imageContainer.append(imageSource);
+                
+                carouselItem.append(imageContainer);
+
+                const itemPreview = carouselItem.cloneNode(true);
+
+                galleryPreviewsItems.append(itemPreview);
+                galleryItemsContainer.append(carouselItem);
+            }
+
+            galleryItemsContainer.children[0].classList.add("active");
+
+            startCarousel();
 
             getOtherShops(allShops);
 

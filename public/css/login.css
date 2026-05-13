@@ -1,12 +1,8 @@
-.navbar .menu {
-    transform: translateY(-100%);
-}
-
-.section:has(form) {
+body:has(#form-login, #form-register) .section:has(form) {
     height: 90vh;
 }
 
-.container:has(form) {
+body:has(#form-login, #form-register) .section .container:has(form) {
     max-width: 700px !important;
     top: 50%;
     transform: translate(-50%, -50%) !important;
@@ -24,9 +20,7 @@ form .title {
 form .field.password .show-password {
     position: absolute;
     font-size: 20px;
-    top: 50%;
     right: 0;
-    transform: translateY(-50%);
     color: var(--text-color);
     background-color: transparent;
     z-index: 3;

@@ -4,8 +4,8 @@
   "description": "Trabajo de final de grado en Formación Profesional Grado Superior en Desarrollo de Aplicaciones Web.",
   "main": "index.js",
   "scripts": {
-    "start": "start http://127.0.0.1:3010/ && node .",
-    "dev": "start http://127.0.0.1:3010/ && code . && nodemon ."
+    "start": "npm install --no-save --loglevel error && dotenv -e .env -- cmd /c start http://127.0.0.1:%APP_PORT%/ && node .",
+    "dev": "npm install --no-save --loglevel error && dotenv -e .env -- cmd /c start http://127.0.0.1:%APP_PORT%/ && code . && nodemon ."
   },
   "nodemonConfig": {
     "ignore": [
@@ -21,6 +21,7 @@
     "bcryptjs": "^3.0.3",
     "colors": "^1.4.0",
     "dotenv": "^17.3.1",
+    "dotenv-cli": "^11.0.0",
     "express": "^5.2.1",
     "express-handlebars": "^8.0.3",
     "fs": "^0.0.1-security",

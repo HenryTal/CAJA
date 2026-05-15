@@ -174,7 +174,7 @@ async function getTendencias(req, res) {
                         }
                     });
                     
-                    // console.log(`[ CAJA ] Actualizando Plataforma (${platformData.nombre}) para el Juego ${game.titulo}`);
+                    // console.log(`[ ${process.env.APP_NAME} ] Actualizando Plataforma (${platformData.nombre}) para el Juego ${game.titulo}`);
 
                     await Juego_Plataformas.upsert({ id_juego: gameDB.id, id_plataforma: platformData.id });
                 }
@@ -188,7 +188,7 @@ async function getTendencias(req, res) {
                         }
                     });
                     
-                    // console.log(`[ CAJA ] Actualizando Genero (${genreData.nombre}) para el Juego ${game.titulo}`);
+                    // console.log(`[ ${process.env.APP_NAME} ] Actualizando Genero (${genreData.nombre}) para el Juego ${game.titulo}`);
 
                     await Juego_Generos.upsert({ id_juego: gameDB.id, id_genero: genreData.id });
                 }
@@ -199,7 +199,7 @@ async function getTendencias(req, res) {
                 await wait(200);
             }
 
-            console.log(`[ CAJA ] Se han actualizado los precios de ${juegosParaInsertar.length} Juegos.`.green);
+            console.log(`[ ${process.env.APP_NAME} ] Se han actualizado los precios de ${juegosParaInsertar.length} Juegos.`.green);
 
             // Recuperamos los datos recién insertados
             listaJuegos = await Juego.findAll({ 
@@ -452,7 +452,7 @@ async function checkShops(gameID) {
                 let gameCheapSharkBG = response.data[0].thumb;
                 await game.update({ id_cheapshark: gameCheapSharkID, thumb: gameCheapSharkBG });
             } else {
-                console.log(`[ CAJA ] Juego con titulo ${game.titulo} no encontrado en CheapShark.`.red);
+                console.log(`[ ${process.env.APP_NAME} ] Juego con titulo ${game.titulo} no encontrado en CheapShark.`.red);
                 return;
             }
         }
@@ -474,11 +474,11 @@ async function checkShops(gameID) {
             });
         }
         
-        console.log(`[ CAJA ] Actualizando precios para el juego con titulo ${game.titulo}...`);
+        console.log(`[ ${process.env.APP_NAME} ] Actualizando precios para el juego con titulo ${game.titulo}...`);
         
         return game;
     } catch (error) {
-        console.log(`[ CAJA ] Error al actualizar los precios para el juego con ID (${gameID}).`);
+        console.log(`[ ${process.env.APP_NAME} ] Error al actualizar los precios para el juego con ID (${gameID}).`);
 
         return { 
             message: `Error al actualizar los precios para el juego con ID (${gameID})`, 

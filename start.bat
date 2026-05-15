@@ -24,8 +24,6 @@ echo.
 echo.
 echo.
 
-start http://127.0.0.1:3010/
-
 echo Iniciando CAJA...
 echo (para terminar el programa pulsar Ctrl+C).
 

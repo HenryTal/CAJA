@@ -41,6 +41,44 @@ body:has(#form-login, #form-register) .navbar .menu {
     padding: 0 20px;
 }
 
+.navbar .menu .item-menu {
+    cursor: pointer;
+}
+
+.navbar .list {
+    list-style: none;
+    position: absolute;
+    max-height: 0;
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    background-color: var(--nav-menu-bg-color);
+    padding: 0;
+    border-radius: 0 0 10px 10px;
+    transform: translateY(-10px);
+    transition: .2s ease padding;
+    z-index: 2;
+}
+
+.navbar .list .list-item {
+    --padding-item: 5px 10px;
+    padding: var(--padding-item);
+}
+
+.navbar .item-menu:hover .list {
+    max-height: 300px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.navbar .list a {
+    color: var(--font-color);
+    padding: var(--padding-item);
+}
+.navbar .list a:hover {
+    color: var(--secondary-color);
+}
+
 .navbar #formSearch {
     padding: 0;
     margin: 0;

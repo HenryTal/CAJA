@@ -117,3 +117,19 @@ async function fillCarousel(carousel, games) {
     startCarousel();
     imagesLoading();
 }
+
+loadGamesInSection("Adventure", ".adventure");
+loadGamesInSection("Action", ".action");
+loadGamesInSection("Indie", ".indie");
+
+function loadGamesInSection(genre, section) {
+    fetch(`/api/juegos?genre=${genre}`)
+        .then(response => {
+            if (response.ok) return response.json();
+            else console.error(`Error al obtener los juegos.`);
+        })
+        .then(games => {
+            loadGamesInWrapper(section, games.rows);
+        })
+        .catch(error => console.error(error));
+}

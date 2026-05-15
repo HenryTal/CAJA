@@ -17,6 +17,11 @@
     --dark-input-error-color: #E65100;
     --dark-image-loading-bg-color: #3E3E3F;
     --dark-badget-bg-color: #313131;
+    --dark-footer-bg-color: #332d23;
+    --dark-footer-title-color: #e6e6e6;
+    --dark-footer-copyright-bg-color: #231d13;
+    --dark-footer-p-color: #ACACAC;
+    --dark-footer-link-color: #8C8C8C;
     
     --light-bg-color: #F9F5EE;
     --light-subtitle-color: #574f46;
@@ -36,13 +41,18 @@
     --light-input-error-color: #E65100;
     --light-image-loading-bg-color: #cccccc;
     --light-badget-bg-color: #c2bab0;
+    --light-footer-bg-color: #bba979;
+    --light-footer-title-color: #383838;
+    --light-footer-copyright-bg-color: #aa8657;
+    --light-footer-p-color: #575656;
+    --light-footer-link-color: #797979;
     
     --primary-color: #D4BC89;
     --secondary-color: #C3AA83;
     
     --title-weight: 700;
     --title-size: 25px;
-
+    
     --subtitle-weight: 600;
     --subtitle-size: 14px;
     
@@ -76,6 +86,13 @@
     --carousel-item-bg-color: #353535;
     
     --wrapper-items-gap: 10px;
+
+    --color-instagram: #E1306C;
+    --color-facebook: #4267B2;
+    --color-phone: #4285F4;
+    --color-whatsapp: #25D366;
+    --color-email: #DB4437;
+    --color-youtube: #FF0033;
 }
 
 /* Variante Regular */
@@ -135,6 +152,11 @@ body[theme="dark"] {
     --input-error-color: var(--dark-input-error-color);
     --image-loading-bg-color: var(--dark-image-loading-bg-color);
     --badget-bg-color: var(--dark-badget-bg-color);
+    --footer-bg-color: var(--dark-footer-bg-color);
+    --footer-title-color: var(--dark-footer-title-color);
+    --footer-copyright-bg-color: var(--dark-footer-copyright-bg-color);
+    --footer-p-color: var(--dark-footer-p-color);
+    --footer-link-color: var(--dark-footer-link-color);
 }
 body[theme="light"] {
     --bg-color: var(--light-bg-color);
@@ -155,6 +177,11 @@ body[theme="light"] {
     --input-error-color: var(--light-input-error-color);
     --image-loading-bg-color: var(--light-image-loading-bg-color);
     --badget-bg-color: var(--light-badget-bg-color);
+    --footer-bg-color: var(--light-footer-bg-color);
+    --footer-title-color: var(--light-footer-title-color);
+    --footer-copyright-bg-color: var(--light-footer-copyright-bg-color);
+    --footer-p-color: var(--light-footer-p-color);
+    --footer-link-color: var(--light-footer-link-color);
 }
 
 .bar {

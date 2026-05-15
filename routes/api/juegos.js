@@ -39,7 +39,7 @@ router.get("/:slug", async (req, res) => {
     const gameSlug = req.params.slug;
 
     try {
-        const game = await juegoController.getJuego(gameSlug);
+        let game = await juegoController.getJuego(gameSlug);
 
         res.status(200).json(game);
     } catch (error) {

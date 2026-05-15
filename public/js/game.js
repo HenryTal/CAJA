@@ -21,6 +21,12 @@ async function loadGameDetails() {
         const infoViewer = await getInfoUser();
         
         const game = await response.json();
+        
+        if (game?.status == 429) {
+            createNotification("normal", "failed", "Limite de Peticiones", "Se ha sobrepasado el limite de CheapShark API. Prueba en otro Momento");
+            return;
+        }
+
         let gameData = game;
         let allShops = game.Tiendas;
         
@@ -32,8 +38,13 @@ async function loadGameDetails() {
 
         let imagesList = await getGameMedias(game.id);
 
-        let sourceThumb = getGameThumb(imagesList);
-        let sourceBackground = getGameBackground(imagesList);
+        let sourceThumb;
+        let sourceBackground;
+
+        if (imagesList.length == 0) {
+            sourceThumb = getGameThumb(imagesList);
+            sourceBackground = getGameBackground(imagesList);
+        }
 
         if (response.ok) {
             const detailsContainer = document.querySelector(".section.details");
@@ -44,11 +55,13 @@ async function loadGameDetails() {
             coverSource.src = `/image/games/${game.slug}/cover.jpg`;
             coverContainer.append(coverSource);
 
-            const backgroundContainer = detailsContainer.querySelector(".background");
-            const backgroundSource = document.createElement("img");
-            backgroundSource.classList.add("image", "img-loading");
-            backgroundSource.src = `/image/medias/${sourceBackground.id_image}.jpg`;
-            backgroundContainer.append(backgroundSource);
+            if (sourceBackground) {
+                const backgroundContainer = detailsContainer.querySelector(".background");
+                const backgroundSource = document.createElement("img");
+                backgroundSource.classList.add("image", "img-loading");
+                backgroundSource.src = `/image/medias/${sourceBackground.id_image}.jpg`;
+                backgroundContainer.append(backgroundSource);
+            }
 
             const titleContainer = detailsContainer.querySelector(".title");
             titleContainer.textContent = game.titulo;
@@ -171,9 +184,11 @@ async function loadGameDetails() {
                 galleryItemsContainer.append(carouselItem);
             }
 
-            galleryItemsContainer.children[0].classList.add("active");
+            if (galleryItemsContainer.children[0]) {
+                galleryItemsContainer.children[0].classList.add("active");
 
-            startCarousel();
+                startCarousel();
+            }
 
             getOtherShops(allShops);
 

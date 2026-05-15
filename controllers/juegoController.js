@@ -207,8 +207,8 @@ async function getTendencias(req, res) {
                 
                 // Actualiza los precios.
                 await checkShops(gameDB.id);
-                // Espera 200ms para evitar problemas con CheapShark API.
-                await wait(200);
+                // Espera 800ms para evitar problemas con CheapShark API.
+                await wait(800);
             }
 
             console.log(`[ ${process.env.APP_NAME} ] Se han actualizado los precios de ${juegosParaInsertar.length} Juegos.`.green);
@@ -236,7 +236,7 @@ async function getTendencias(req, res) {
 // Obtener Juegos desde RAWG API.
 async function getRAWGData() {
     const RAWG_TOKEN = process.env.RAWG_TOKEN;
-    const url = `https://api.rawg.io/api/games?key=${RAWG_TOKEN}&page_size=100&ordering=-added`;
+    const url = `https://api.rawg.io/api/games?key=${RAWG_TOKEN}&page_size=30&ordering=-added`;
     // const url = `http://127.0.0.1:3010/api/juegos/test`;
 
     try {
@@ -441,6 +441,8 @@ async function getJuego(slug) {
             ]
         });
 
+        if (game.Tiendas.length == 0) game = await checkShops(game.id);
+
         return game;
     } catch (error) {
         return { 
@@ -492,7 +494,8 @@ async function checkShops(gameID) {
     } catch (error) {
         console.log(`[ ${process.env.APP_NAME} ] Error al actualizar los precios para el juego con ID (${gameID}).`);
 
-        return { 
+        return {
+            status: error.status,
             message: `Error al actualizar los precios para el juego con ID (${gameID})`, 
             error: error.message 
         };
@@ -502,12 +505,21 @@ async function checkShops(gameID) {
 async function getGameMedias(gameID) {
     try {
         const game = await Juego.findByPk(gameID);
+
+        if (game.id_igdb == null) {
+            let gameIGDBData = await getIGDBData([game]);
+            gameIGDBData = gameIGDBData[0];
+
+            game.id_igdb = gameIGDBData.id_igdb;
+            await Juego.upsert(gameIGDBData);
+        }
+
         const medias = await Media.findAll({ where: { id_juego: game.id_igdb } });
 
         return medias;
     } catch (error) {
         return {
-            message: `Error al obtener imagenes de el juego con ID (${gameID}`,
+            message: `Error al obtener imagenes de el juego con ID (${gameID})`,
             error: error.message
         }
     }

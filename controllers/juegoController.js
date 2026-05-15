@@ -69,6 +69,18 @@ async function getJuegos(req, res) {
             includesPlataforma.required = true;
         }
 
+        // Si se filtra por plataforma.
+        if (filter.shop?.length) {
+            // Crea un Array con los generos.
+            const arrayShops = Array.isArray(filter.shop) ? filter.shop : [filter.shop];
+            
+            // La condición del filtro por plataforma.
+            includesTienda.where = {
+                nombre: { [Op.in]: arrayShops }
+            };
+            includesTienda.required = true;
+        }
+
         // Incluye las tablas al Array para la consulta.
         const includesOptional = [includesTienda, includesPlataforma, includesGenero];
 

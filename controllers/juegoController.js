@@ -13,6 +13,12 @@ const Juego_Generos = require("../models/Juego_Generos");
 
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+const consult = {
+    headers: {
+        'User-Agent': 'CAJA-Backend/1.0 (henry11.talavera@gmail.com)'
+    }
+};
+
 /**
  * Obtiene los datos de los juegos que cumplan el filtro.
  * @param {*} req - Datos introducidos en la petición.
@@ -236,8 +242,8 @@ async function getTendencias(req, res) {
 // Obtener Juegos desde RAWG API.
 async function getRAWGData() {
     const RAWG_TOKEN = process.env.RAWG_TOKEN;
-    const url = `https://api.rawg.io/api/games?key=${RAWG_TOKEN}&page_size=30&ordering=-added`;
-    // const url = `http://127.0.0.1:3010/api/juegos/test`;
+    // const url = `https://api.rawg.io/api/games?key=${RAWG_TOKEN}&page_size=30&ordering=-added`;
+    const url = `http://127.0.0.1:3010/api/juegos/test`;
 
     try {
         const response = await axios.get(url);
@@ -266,25 +272,21 @@ async function getIGDBData(games) {
 
     const url = "https://api.igdb.com/v4/games";
 
-    const searchSlugs = games.map(game => (game.slug));
+    const searchSlugs = games.map(game => `"${game.slug}"`).join(",");
 
-    let searchNames = games.map(game => (game.titulo));
-    searchNames = searchNames.map(name => `name ~ "${name}"`).join(" | ");
-    
+    const searchNames = games.map(game => {
+        const nameClean = game.titulo.replace(/['’"\\]/g, "").trim();
+
+        return `name ~ "${game.titulo}"`;
+    }).join(" | ");
+
     const query = `
-        fields id,
-        name,
-        slug,
-        summary,
-        cover.url;
-        where 
-            (
-                slug = ("${searchSlugs.join('", "')}") |
-                (${searchNames})
-            ) &
-            version_parent = null &
-            parent_game = null;
-        limit 20;
+        fields id,name,slug,summary,cover.url;
+        where (${searchNames})
+        & version_parent = null 
+        & parent_game = null;
+        sort popularity desc;
+        limit 50;
     `;
     
     let gamesData = [];
@@ -312,7 +314,7 @@ async function getIGDBData(games) {
         const gameDataIGDB = gamesData[gamesData.findIndex(data => (data.slug == game.slug || data.name == game.titulo))];
         
         // console.log(`[ IGDB ] Buscando información para ${game.slug}...`.cyan);
-        
+
         if (gameDataIGDB == undefined) {
             // console.log(`[ IGDB ] Nada encontrado para ${game.slug} o ${game.titulo}.`.red);
             continue;
@@ -321,6 +323,7 @@ async function getIGDBData(games) {
         game.id_igdb = gameDataIGDB.id;
         game.poster = gameDataIGDB.cover.url.replace("t_thumb", "t_cover_big");
         game.descripcion = gameDataIGDB.summary;
+
 
         // console.log(`[ IGDB ] Juego Encontrado con el ID (${gameDataIGDB.id})`.green);
     }
@@ -336,8 +339,10 @@ async function getGamesArtworks(games) {
 
     let url = "https://api.igdb.com/v4/artworks";
     
-    const searchGameIDs = games.filter(game => game.id_igdb).map(game => (game.id_igdb));
+    const searchGameIDs = games.filter(game => game.id_igdb != null).map(game => Number(game.id_igdb));
     
+    if (searchGameIDs.length == 0) return [];
+
     const artQuery = `
         fields 
             alpha_channel,
@@ -349,7 +354,7 @@ async function getGamesArtworks(games) {
             image_id,
             url,
             width;
-        where game = (${searchGameIDs.join(', ')});
+        where game = (${searchGameIDs.join(',')});
         limit 100;
     `;
     
@@ -369,6 +374,7 @@ async function getGamesArtworks(games) {
         });
         
         artworksData = response.data;
+
     } catch (error) {
         console.error('Error en IGDB:', error.response ? error.response.data : error.message);
         throw error;
@@ -460,7 +466,7 @@ async function checkShops(gameID) {
         if (!gameCheapSharkID || gameCheapSharkID == null) {
             const url = `https://www.cheapshark.com/api/1.0/games?title=${game.titulo}&limit=1`;
 
-            const response = await axios.get(url);
+            const response = await axios.get(url, consult);
             if (response.data.length > 0) {
                 gameCheapSharkID = response.data[0].gameID;
                 let gameCheapSharkBG = response.data[0].thumb;
@@ -473,7 +479,7 @@ async function checkShops(gameID) {
         
         const url = `https://www.cheapshark.com/api/1.0/games?id=${gameCheapSharkID}`;
         
-        const response = await axios.get(url);
+        const response = await axios.get(url, consult);
         const offers = response.data.deals;
         
         for (const offer of offers) {

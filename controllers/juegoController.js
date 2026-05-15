@@ -242,8 +242,8 @@ async function getTendencias(req, res) {
 // Obtener Juegos desde RAWG API.
 async function getRAWGData() {
     const RAWG_TOKEN = process.env.RAWG_TOKEN;
-    // const url = `https://api.rawg.io/api/games?key=${RAWG_TOKEN}&page_size=30&ordering=-added`;
-    const url = `http://127.0.0.1:3010/api/juegos/test`;
+    const url = `https://api.rawg.io/api/games?key=${RAWG_TOKEN}&page_size=30&ordering=-added`;
+    // const url = `http://127.0.0.1:3010/api/juegos/test`;
 
     try {
         const response = await axios.get(url);

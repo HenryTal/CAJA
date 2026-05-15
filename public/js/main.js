@@ -628,7 +628,7 @@ function getDiscounts(priceNow = 0, priceBase = 0) {
 
         const priceOfferContainer = document.createElement("span");
         priceOfferContainer.classList.add("offer");
-        priceOfferContainer.textContent = Math.round((priceBase * priceNow) / 100);
+        priceOfferContainer.textContent = 100 - Math.floor((priceNow / priceBase) * 100);
 
         priceContainer.append(priceOfferContainer, priceBaseContainer, priceNowContainer);
     } else priceContainer.append(priceBaseContainer);

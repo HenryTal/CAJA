@@ -1,20 +1,5 @@
 const Genero = require("../models/Genero");
 
-const listGeneros = [
-    {
-        nombre: "Accion",
-    },
-    {
-        nombre: "Aventura",
-    },
-    {
-        nombre: "RPG",
-    },
-    {
-        nombre: "Simulador",
-    }
-];
-
 async function getAllGenres(req, res) {
     try {
         const genres = await Genero.findAll();
@@ -30,7 +15,27 @@ async function getAllGenres(req, res) {
 
 // Inserta datos a la tabla sin duplicar filas.
 async function fillTable() {
-    await Genero.bulkCreate(listGeneros, { ignoreDuplicates: true });
+    const rows = Genero.count();
+    
+    if (rows != 0) return;
+
+    try {
+        const RAWG_TOKEN = process.env.RAWG_TOKEN;
+
+        const url = `https://api.rawg.io/api/genres?key=${RAWG_TOKEN}&page_size=20`;
+        const response = await axios.get(url);
+
+        const genresList = response.data.results;
+
+        for (const genre of genresList) {
+            await Genero.upsert({
+                nombre: genre.name,
+                id_rawg: genre.id
+            });
+        }
+    } catch (error) {
+        console.error("Error al actualizar generos: ", error);
+    }
 }
 
 module.exports = { getAllGenres, fillTable };

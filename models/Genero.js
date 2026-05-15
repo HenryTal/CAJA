@@ -11,6 +11,11 @@ const Genero = sequelize.define("Genero", {
         type: DataTypes.STRING,
         unique: true,
         allowNull: false
+    },
+    id_rawg: {
+        type: DataTypes.INTEGER,
+        unique: true,
+        allowNull: true
     }
 }, {
     tableName: "generos",

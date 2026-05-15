@@ -568,7 +568,7 @@ function getDiscounts(priceNow = 0, priceBase = 0) {
 }
 
 function getPrice(tiendas) {
-    if (tiendas.length == 0) {
+    if (!tiendas[0] || tiendas.length == 0) {
         const priceContainer = document.createElement("span");
         const priceBase = document.createElement("span");
         priceBase.classList.add("base");
@@ -840,7 +840,7 @@ async function togglePurchased(game, inPurchasedList) {
         const data = await response.json();
 
         if (response.ok) {
-            createNotification("purchasedlist", "success", game.titulo, `Se ha ${action == "add" ? "agregado ha" : "removido de"} tu lista de juegos comprados.`, `/image/games/${game.slug}/cover.jpg`);
+            createNotification("purchasedlist", "success", game.titulo, `Se ha ${action == "add" ? "agregado a" : "removido de"} tu lista de juegos comprados.`, `/image/games/${game.slug}/cover.jpg`);
             imagesLoading();
 
             return true;
@@ -878,7 +878,7 @@ async function toggleFavorite(game, inWishList) {
         const data = await response.json();
 
         if (response.ok) {
-            createNotification("wishlist", "success", game.titulo, `Se ha ${action == "add" ? "agregado ha" : "removido de"} tu lista de deseos.`, `/image/games/${game.slug}/cover.jpg`);
+            createNotification("wishlist", "success", game.titulo, `Se ha ${action == "add" ? "agregado a" : "removido de"} tu lista de deseos.`, `/image/games/${game.slug}/cover.jpg`);
             imagesLoading();
 
             return true;

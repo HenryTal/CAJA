@@ -122,6 +122,12 @@
     margin: 10px 0 20px 0;
 }
 
+.gallery .item-image {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 .gallery-previews {
     margin-top: 20px;
 }

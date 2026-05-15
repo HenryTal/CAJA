@@ -9,6 +9,7 @@ const Genero = require("../models/Genero");
 const Plataforma = require("../models/Plataforma");
 const Juego_Tiendas = require("../models/Juego_Tiendas");
 const Juego_Plataformas = require("../models/Juego_Plataformas");
+const Juego_Generos = require("../models/Juego_Generos");
 
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -165,13 +166,32 @@ async function getTendencias(req, res) {
 
                 for (let platform of game.platforms) {
                     platform = platform.platform;
-                    const platformData = await Plataforma.findOne({ where: { id_rawg: platform.id } });
+                    const [ platformData, created ] = await Plataforma.findOrCreate({ 
+                        where: { id_rawg: platform.id }, 
+                        defaults: {
+                            nombre: platform.name,
+                            id_rawg: platform.id
+                        }
+                    });
                     
                     // console.log(`[ CAJA ] Actualizando Plataforma (${platformData.nombre}) para el Juego ${game.titulo}`);
 
                     await Juego_Plataformas.upsert({ id_juego: gameDB.id, id_plataforma: platformData.id });
                 }
 
+                for (let genre of game.genres) {
+                    const [ genreData, created ] = await Genero.findOrCreate({ 
+                        where: { id_rawg: genre.id }, 
+                        defaults: {
+                            nombre: genre.name,
+                            id_rawg: genre.id
+                        }
+                    });
+                    
+                    // console.log(`[ CAJA ] Actualizando Genero (${genreData.nombre}) para el Juego ${game.titulo}`);
+
+                    await Juego_Generos.upsert({ id_juego: gameDB.id, id_genero: genreData.id });
+                }
                 
                 // Actualiza los precios.
                 await checkShops(gameDB.id);
@@ -204,8 +224,8 @@ async function getTendencias(req, res) {
 // Obtener Juegos desde RAWG API.
 async function getRAWGData() {
     const RAWG_TOKEN = process.env.RAWG_TOKEN;
-    // const url = `https://api.rawg.io/api/games?key=${RAWG_TOKEN}&page_size=12&ordering=-added`;
-    const url = `http://127.0.0.1:3010/api/juegos/test`;
+    const url = `https://api.rawg.io/api/games?key=${RAWG_TOKEN}&page_size=100&ordering=-added`;
+    // const url = `http://127.0.0.1:3010/api/juegos/test`;
 
     try {
         const response = await axios.get(url);
@@ -219,6 +239,7 @@ async function getRAWGData() {
             id_rawg: game.id,
             fecha_lanzamiento: game.released,
             platforms: game.platforms,
+            genres: game.genres,
             es_tendencia: false
         }));
     } catch (error) {
@@ -426,7 +447,6 @@ async function checkShops(gameID) {
             const url = `https://www.cheapshark.com/api/1.0/games?title=${game.titulo}&limit=1`;
 
             const response = await axios.get(url);
-            
             if (response.data.length > 0) {
                 gameCheapSharkID = response.data[0].gameID;
                 let gameCheapSharkBG = response.data[0].thumb;
@@ -455,9 +475,11 @@ async function checkShops(gameID) {
         }
         
         console.log(`[ CAJA ] Actualizando precios para el juego con titulo ${game.titulo}...`);
-
+        
         return game;
     } catch (error) {
+        console.log(`[ CAJA ] Error al actualizar los precios para el juego con ID (${gameID}).`);
+
         return { 
             message: `Error al actualizar los precios para el juego con ID (${gameID})`, 
             error: error.message 

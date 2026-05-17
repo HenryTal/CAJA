@@ -162,8 +162,11 @@ async function getTendencias(req, res) {
             }] // Incluyendo la conexión con la tabla "Tienda".
         });
 
-        // Si no se han encontrado juegos en la base de datos.
-        if (listaJuegos.length == 0) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // Si no se han encontrado juegos en la base de datos o si se actualizo el precio por ultima vez ayer.
+        if (listaJuegos.length === 0 || listaJuegos[0].Tiendas.length === 0 || new Date(listaJuegos[0].Tiendas[0].Juego_Tiendas.updatedAt) < today) {
             // Obtiene los juegos desde RAWG API.
             let juegosParaInsertar = await getRAWGData();
             // Agrega los datos de IGDB API.
@@ -171,9 +174,6 @@ async function getTendencias(req, res) {
             
             // Inserta los juegos obtenidos a la tabla "Juego" para proximas consultas.
             await Juego.bulkCreate(juegosParaInsertar, { ignoreDuplicates: true });
-
-            // Busca en la tabla "Juegos" para obtener los juegos recien insertados.
-            // const juegosParaActualizar = await Juego.findAll({ limit: 20 });
 
             // Por cada juego.
             for (const game of juegosParaInsertar) {
@@ -213,8 +213,8 @@ async function getTendencias(req, res) {
                 
                 // Actualiza los precios.
                 await checkShops(gameDB.id);
-                // Espera 800ms para evitar problemas con CheapShark API.
-                await wait(800);
+                // Espera 600ms para evitar problemas con CheapShark API.
+                await wait(600);
             }
 
             console.log(`[ ${process.env.APP_NAME} ] Se han actualizado los precios de ${juegosParaInsertar.length} Juegos.`.green);
@@ -242,8 +242,8 @@ async function getTendencias(req, res) {
 // Obtener Juegos desde RAWG API.
 async function getRAWGData() {
     const RAWG_TOKEN = process.env.RAWG_TOKEN;
-    const url = `https://api.rawg.io/api/games?key=${RAWG_TOKEN}&page_size=30&ordering=-added`;
-    // const url = `http://127.0.0.1:3010/api/juegos/test`;
+    const url = `https://api.rawg.io/api/games?key=${RAWG_TOKEN}&page_size=20&ordering=-added`;
+    // const url = `http://127.0.0.1:3010/api/juegos/test`; // Ruta con juegos guardados en un JSON para Pruebas.
 
     try {
         const response = await axios.get(url);
@@ -447,7 +447,10 @@ async function getJuego(slug) {
             ]
         });
 
-        if (game.Tiendas.length == 0) game = await checkShops(game.id);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (game.Tiendas.length === 0 || new Date(game.Tiendas.Juego_Tiendas.updatedAt) < today) game = await checkShops(game.id);
 
         return game;
     } catch (error) {

@@ -450,7 +450,11 @@ async function getJuego(slug) {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        if (game.Tiendas.length === 0 || new Date(game.Tiendas.Juego_Tiendas.updatedAt) < today) game = await checkShops(game.id);
+        let gameUpdated;
+
+        if (game.Tiendas.length === 0 || new Date(game.Tiendas.Juego_Tiendas.updatedAt) < today) gameUpdated = await checkShops(game.id);
+
+        if (gameUpdated) game = gameUpdated;
 
         return game;
     } catch (error) {

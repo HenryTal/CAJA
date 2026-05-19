@@ -158,7 +158,7 @@ async function getTendencias(req, res) {
             limit: 20, // Con un limite de 20.
             include: [{
                 model: Tienda,
-                through: { attributes: ['precio_actual', 'precio_base', 'web'] }
+                through: { attributes: ['precio_actual', 'precio_base', 'web', 'updatedAt'] }
             }] // Incluyendo la conexión con la tabla "Tienda".
         });
 
@@ -434,7 +434,7 @@ async function getJuego(slug) {
             include: [
                 {
                     model: Tienda,
-                    through: { attributes: [ "precio_actual", "precio_base", "web" ] }
+                    through: { attributes: [ "precio_actual", "precio_base", "web", "updatedAt" ] }
                 },
                 {
                     model: Plataforma,
@@ -452,7 +452,9 @@ async function getJuego(slug) {
 
         let gameUpdated;
 
-        if (game.Tiendas.length === 0 || new Date(game.Tiendas.Juego_Tiendas.updatedAt) < today) gameUpdated = await checkShops(game.id);
+        console.log(game.Tiendas[0].Juego_Tiendas.updatedAt);
+
+        if (game.Tiendas.length === 0 || new Date(game.Tiendas[0].Juego_Tiendas.updatedAt) < today) gameUpdated = await checkShops(game.id);
 
         if (gameUpdated) game = gameUpdated;
 
@@ -467,7 +469,23 @@ async function getJuego(slug) {
 
 async function checkShops(gameID) {
     try {
-        let game = await Juego.findByPk(gameID);
+        let game = await Juego.findOne({ 
+            where: { id: gameID },
+            include: [
+                {
+                    model: Tienda,
+                    through: { attributes: [ "precio_actual", "precio_base", "web", "updatedAt" ] }
+                },
+                {
+                    model: Plataforma,
+                    through: { attributes: [] }
+                },
+                {
+                    model: Genero,
+                    through: { attributes: [] }
+                }
+            ]
+        });
         let gameCheapSharkID = game.id_cheapshark;
 
         if (!gameCheapSharkID || gameCheapSharkID == null) {

@@ -452,8 +452,6 @@ async function getJuego(slug) {
 
         let gameUpdated;
 
-        console.log(game.Tiendas[0].Juego_Tiendas.updatedAt);
-
         if (game.Tiendas.length === 0 || new Date(game.Tiendas[0].Juego_Tiendas.updatedAt) < today) gameUpdated = await checkShops(game.id);
 
         if (gameUpdated) game = gameUpdated;
